@@ -5,6 +5,7 @@
     <artifactId>my-app</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>MP05UF2P2</name>
+    <!-- https://maven.apache.org/guides/getting-started/maven-in-five-minutes.html -->
     <!-- FIXME change it to the project's website -->
     <url>http://www.doncom.me</url>
     <properties>
