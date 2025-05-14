@@ -1,0 +1,38 @@
+# Nom del worflow que es mostrara a Github Actions
+name: Java CI with Maven
+
+# En aquest punt hem de definir quan s'executara automaticament quan
+# - Quan es faci push a qualsevol branca. Es podria indicar una o varies... ["main", "add-complements"]
+# - O quan es faci una pull request a qualsevol branca.
+on:
+  push:
+    branches: [ "**" ]
+    pull_request:
+      branches: [ "**" ]
+
+      jobs:
+        build:
+
+          # Utilitzacio de un sistema Linux
+          runs-on: ubuntu-latest
+
+          steps:
+            # Clonacio del repositori al runner del Github Actions
+            - name: Clonar el repositori
+              uses: actions/checkout@v4
+
+            # Instalació de Java, versio 11
+            - name: Instal·lar Java
+              uses: actions/setup-java@v4
+              with:
+                distribution: 'temurin'
+                java-version: '11'
+
+            # Compilar el projecte Maven
+            - name: Compilar amb Maven
+              run: mvn -B compile --file pom.xml
+
+            # Execucio de proves
+            - name: Executar proves
+              run: mvn -B test --file pom.xml
+
