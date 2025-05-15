@@ -208,7 +208,7 @@ public class HashTableGetTest {
         String key;
         String msg;
         String result;
-        key = colls.get(2);
+        key = colls.get(2); // No s'afegeix
         result = hashTable.get(key);
         msg = String.format("S'esperava NULL perquè la clau %s no existeix, pero s'ha retornat %s",
                 key, result);

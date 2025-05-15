@@ -80,9 +80,7 @@ public class HashTable {
     }
 
     /**
-     * Permet esborrar un element dins de la taula.
-     * @param key La clau de l'element a trobar.
-     */
+     * DROP ORIGINAL "ESBORRAT"
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
@@ -92,6 +90,39 @@ public class HashTable {
                 temp = temp.next;
 
             if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+            else{
+                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
+                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+            }
+        }
+    }
+     */
+
+    /**
+     * Permet esborrar un element dins de la taula.
+     * @param key La clau de l'element a trobar.
+     */
+    public void drop(String key) {
+        int hash = getHash(key);
+        if(entries[hash] != null) {
+
+            HashEntry temp = entries[hash];
+            // while( !temp.key.equals(key))
+            while(temp != null && !temp.key.equals(key))
+                temp = temp.next;
+            if (temp == null) return;
+
+            if(temp.prev == null) {
+                /// Si entra aqui es el primer de la llista
+                /// Si es compleix la seguent condicio es que no hi ha cap mes al bucket.
+                /// En canvi si hi ha mes, el seguent es converteix en el primer
+                // entries[hash] = null;
+                if (temp.next == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+                else {
+                    entries[hash] = temp.next;
+                    temp.next.prev = null;
+                }
+            }
             else{
                 if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
                 temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
