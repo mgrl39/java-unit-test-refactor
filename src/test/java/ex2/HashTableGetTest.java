@@ -20,8 +20,8 @@ public class HashTableGetTest {
         HashTable hashTable = new HashTable();
 
         String key;
-        String msg;
         String value;
+        String msg;
 
         key = "abc";
         value = "prova";
@@ -41,10 +41,24 @@ public class HashTableGetTest {
         HashTable hashTable = new HashTable();
 
         String key;
-        String msg;
         String value;
+        String msg;
 
-        key 
+        key = "abc";
+        value = "prova";
+        hashTable.put(key, value);
+
+        String segon;
+        String segonValue;
+        segon = hashTable.getCollisionsForKey(key);
+        segonValue = "m05";
+        hashTable.put(segon, segonValue);
+        // System.out.printf(hashTable.toString() + "\n" + hashTable.get(key) + "\n");
+        msg = String.format(
+                "La taula no ha retornat el valor esperat per la clau: %s\nValor esperat: %s\nValor retornat: %s",
+                key, value, hashTable.get(key)
+        );
+        assertEquals(value, hashTable.get(key), msg);
     }
 
     /**
