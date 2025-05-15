@@ -88,7 +88,7 @@ public class HashTablePutTest {
         key = hashTable.getCollisionsForKey(primera); // Per trobar una clau que col·lisiona amb "abc"
         value = "prova";
         hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + key + ", " + value + "]";
+        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(key, value);
         assertTrue(hashTable.toString().contains(expected),
                 "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected:" + expected);
     }
@@ -124,8 +124,8 @@ public class HashTablePutTest {
         key = colls.get(1); // Per trobar una clau que col·lisiona amb "abc"
         value = "prova";
         hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + segonaValue + "]";
-        expected += " -> [" + key + ", " + value + "]";
+        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(segona, segonaValue);
+        expected += formatChainedEntry(key, value);
         assertTrue(hashTable.toString().contains(expected),
                 "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected: " + expected);
     }
@@ -187,7 +187,7 @@ public class HashTablePutTest {
         key = primera;
         value = "prova";
         hashTable.put(key, value);
-        expected = formatExpectedEntry(key, value) + " -> [" + segona + ", " + segonaValue + "]";
+        expected = formatExpectedEntry(key, value) + formatChainedEntry(segona, segonaValue);
         assertTrue(hashTable.toString().contains(expected),
                 "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
     }
@@ -241,5 +241,49 @@ public class HashTablePutTest {
         sobre un element que si col·lisiona (3a posició)
         dins una taula no vuida.
     */
+    @Test
+    public void testUpdateElementColisioTerceraPosTaulaNobuida() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        // Demanem tres col·lisions diferents per fer
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
+        String segona;
+        String segonaValue;
+        segona = colls.get(0);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+        String tercera;
+        String terceraValue;
+        tercera = colls.get(1);
+        terceraValue = "m12";
+        hashTable.put(tercera, terceraValue);
+
+        String quarta;
+        String quartaValue;
+        quarta = colls.get(2);
+        quartaValue = "m00";
+        hashTable.put(quarta, quartaValue);
+
+        String key;
+        String value;
+        String expected;
+
+        key = tercera;
+        value = "canvi de la prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(segona, segonaValue);
+        expected += formatChainedEntry(key, value) + formatChainedEntry(quarta, quartaValue);
+        // System.out.printf("%s", expected);
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+    }
 
 }
