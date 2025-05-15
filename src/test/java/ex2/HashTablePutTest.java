@@ -10,18 +10,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
+import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //   S'ha de fer servir el mètode "put" generar les següents situacions:
 public class HashTablePutTest {
-
-    private static int getBucketIndex(String k) {
-        return Math.floorMod(k.hashCode(), 16);
-    }
-
-    private static String formatExpectedEntry(String key, String value) {
-        return ("\n bucket[" + getBucketIndex(key) + "] = [" + key + ", " + value + "]");
-    }
     /**
          Inserir un element que no col·lisiona dins
          una taula vuida (sense elements).
@@ -72,15 +65,66 @@ public class HashTablePutTest {
 
 
     /**
-       Inserir un element que col·lisiona dins
-       una taula no vuida, que es col·locarà en 2a posició dins el mateix bucket.
+       Inserir un element que col·lisiona dins una taula no vuida,
+       que es col·locarà en 2a posició dins el mateix bucket.
      */
+    @Test
+    public void testInserirElementColisioSegonaPosTaulaNoBuida() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String key;
+        String value;
+        String expected;
+
+        key = hashTable.getCollisionsForKey(primera); // Per trobar una clau que col·lisiona amb "abc"
+        value = "prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + key + ", " + value + "]";
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\n");
+    }
 
 
     /**
         Inserir un element que col·lisiona dins una taula no vuida,
         que es col·locarà en 3a posició dins el mateix bucket.
      */
+    @Test
+    public void testInserirElementColisioTerceraPosTaulaNoBuida() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String segona;
+        String segonaValue;
+        segona = hashTable.getCollisionsForKey(primera);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+        String key;
+        String value;
+        String expected;
+
+        key = hashTable.getCollisionsForKey(primera); // Per trobar una clau que col·lisiona amb "abc"
+        value = "prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + segonaValue + "]";
+        expected += " -> [" + key + ", " + value + "]";
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\n");
+    }
 
     /**
         Inserir un elements que ja existeix (update)
