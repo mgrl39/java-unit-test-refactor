@@ -156,6 +156,27 @@ public class HashTableGetTest {
     /**
      * Obtenir un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
      */
+    @Test
+    public void testObtenirElementNoExisteixPosOcupadaPerAltreNoCol() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String key;
+        String msg;
+        String result;
+
+        key = hashTable.getCollisionsForKey(primera);
+        result = hashTable.get(key);
+        msg = String.format("S'esperava NULL perquè la clau %s no existeix, pero s'ha retornat %s",
+                key, result);
+        assertNull(result, msg);
+    }
 
     /**
      * Obtenir un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.

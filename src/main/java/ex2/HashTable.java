@@ -68,10 +68,12 @@ public class HashTable {
         if(entries[hash] != null) {
             HashEntry temp = entries[hash];
 
-            while( !temp.key.equals(key))
+            // while( !temp.key.equals(key))
+            while(temp != null && !temp.key.equals(key))
                 temp = temp.next;
 
-            return temp.value;
+            // return temp.value;
+            if (temp != null) return temp.value;
         }
 
         return null;
