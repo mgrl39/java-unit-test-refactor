@@ -2,6 +2,8 @@ package ex2;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -102,6 +104,51 @@ public class HashTableDropTest {
     /**
      * Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
+    @Test
+    public void testEsborrarElementcolisionaDinsUnaTaulaTerceraPos() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
+        String segona;
+        String segonaValue;
+        segona = colls.get(0);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+        String key;
+        String value;
+        key = colls.get(1);
+        value = "esborrare aquesta!! :)";
+        hashTable.put(key, value);
+
+        String unaMes;
+        String unaMesValue;
+        unaMes = colls.get(2);
+        unaMesValue = "per veure si uneix be...";
+        hashTable.put(unaMes, unaMesValue);
+
+        String expected;
+        String actual;
+        String msg;
+
+        // System.out.printf("ABANS: %s\n", hashTable.toString());
+        hashTable.drop(key);
+        msg = "S'esperava que la clau " + key + " ja no hi fos.";
+        assertNull(hashTable.get(key), msg);
+        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue) + HashTableTestHelper.formatChainedEntry(segona, segonaValue);
+        expected += HashTableTestHelper.formatChainedEntry(unaMes, unaMesValue);
+
+        actual = hashTable.toString();
+        // System.out.printf("ACTUAL: %s\n", actual);
+        // System.out.printf("EXPECTED: %s\n", expected);
+        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+    }
 
     /**
      * Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
