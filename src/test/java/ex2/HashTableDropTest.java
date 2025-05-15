@@ -18,7 +18,7 @@ public class HashTableDropTest {
      * Esborrar un element que no col·lisiona dins una taula.
      */
     @Test
-    public void testElementNoColDinsUnaTaula() {
+    public void testEsborrarElementNoColDinsUnaTaula() {
         HashTable hashTable = new HashTable();
 
         String key;
@@ -40,7 +40,7 @@ public class HashTableDropTest {
      * Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
      */
     @Test
-    public void testElementColisionaDinsUnaTaulaPrimeraPos() {
+    public void testEsborrarElementColisionaDinsUnaTaulaPrimeraPos() {
         HashTable hashTable = new HashTable();
 
         String key;
@@ -71,6 +71,33 @@ public class HashTableDropTest {
     /**
      * Esborrar un element que si col·lisiona dins una taula (2a posició dins el mateix bucket).
      */
+    @Test
+    public void testEsborrarElementcolisionaDinsUnaTaulaSegonaPos() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String key;
+        String value;
+        String msg;
+
+        key = hashTable.getCollisionsForKey(primera);
+        value = "m05";
+        hashTable.put(key, value);
+        hashTable.drop(key);
+        String expected;
+        String actual;
+        msg = "S'esperava que la clau " + key + " ja no hi fos.";
+
+        assertNull(hashTable.get(key), msg);
+        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
+        actual = hashTable.toString();
+        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+    }
 
     /**
      * Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
