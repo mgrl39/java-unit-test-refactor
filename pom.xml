@@ -35,9 +35,15 @@
             <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.11.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
-        <pluginManagement>
+        <!-- <pluginManagement> -->
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -48,6 +54,6 @@
                     </configuration>
                 </plugin>
             </plugins>
-        </pluginManagement>
+       <!--  </pluginManagement> -->
     </build>
 </project>
