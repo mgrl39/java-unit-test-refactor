@@ -33,14 +33,28 @@ public class HashTable {
 
         if(entries[hash] == null) {
             entries[hash] = hashEntry;
-        }
-        else {
+        } else {
+            /*
             HashEntry temp = entries[hash];
             while(temp.next != null)
                 temp = temp.next;
 
             temp.next = hashEntry;
             hashEntry.prev = temp;
+             */
+            HashEntry temp = entries[hash];
+            while (temp != null) {
+                if (temp.key.equals(key)) {
+                    temp.value = value;
+                    return;
+                }
+                if (temp.next == null) {
+                    temp.next = hashEntry;
+                    hashEntry.prev = temp;
+                    return;
+                };
+                temp = temp.next;
+            }
         }
     }
 

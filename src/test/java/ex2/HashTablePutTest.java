@@ -8,6 +8,7 @@ package ex2;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import static ex2.HashTableTestHelper.*;
@@ -107,9 +108,11 @@ public class HashTablePutTest {
         primeraValue = "m03";
         hashTable.put(primera, primeraValue);
 
+        // Demanem dues col·lisions diferents per "fer"
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 2);
         String segona;
         String segonaValue;
-        segona = hashTable.getCollisionsForKey(primera);
+        segona = colls.get(0);
         segonaValue = "m05";
         hashTable.put(segona, segonaValue);
 
@@ -117,7 +120,7 @@ public class HashTablePutTest {
         String value;
         String expected;
 
-        key = hashTable.getCollisionsForKey(primera); // Per trobar una clau que col·lisiona amb "abc"
+        key = colls.get(1); // Per trobar una clau que col·lisiona amb "abc"
         value = "prova";
         hashTable.put(key, value);
         expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + segonaValue + "]";
@@ -130,6 +133,30 @@ public class HashTablePutTest {
         Inserir un elements que ja existeix (update)
         sobre un element que no col·lisiona dins una taula no vuida.
      */
+    @Test
+    public void testUpdateElementNoColisioTaulaNoBuida() {
+        HashTable hashTable = new HashTable();
+
+        // Elements previs (no col·lisionen amb "abc")
+        Map<String, String> dades = Map.of(
+                "fer", "m03",
+                "david", "m05",
+                "yago", "m12"
+        );
+        dades.forEach(hashTable::put);
+        hashTable.put("abc", "prova");
+        String key;
+        String value;
+        String expected;
+
+        key = "abc";
+        value = "canvi de la prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(key, value);
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra el valor com esperat:\n" + hashTable + "\n");
+
+    }
 
     /**
         Inserir un elements que ja existeix (update) sobre un element
