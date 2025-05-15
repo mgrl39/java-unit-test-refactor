@@ -197,6 +197,44 @@ public class HashTablePutTest {
         sobre un element que si col·lisiona
         (2a posició) dins una taula no vuida.
      */
+    @Test
+    public void testUpdateElementColisioSegonaPosTaulaNoBuida() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        // Demanem dues col·lisions diferents per "fer"
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 2);
+        String segona;
+        String segonaValue;
+        segona = colls.get(0);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+
+        String tercera;
+        String terceraValue;
+        tercera = colls.get(1);
+        terceraValue = "prova";
+        hashTable.put(tercera, terceraValue);
+
+        String key;
+        String value;
+        String expected;
+
+        key = segona;
+        value = "canvi de la prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + value + "]";
+        expected += " -> [" + tercera + ", " + terceraValue + "]";
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+    }
 
     /**
         Inserir un elements que ja existeix (update)
