@@ -33,7 +33,8 @@ public class HashTablePutTest {
         hashTable.put(key, value);
 
         expected = formatExpectedEntry(key, value);
-        assertTrue(hashTable.toString().contains(expected));
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
     }
 
     /**
@@ -61,7 +62,7 @@ public class HashTablePutTest {
         hashTable.put(key, value);
         expected = formatExpectedEntry(key, value);
         assertTrue(hashTable.toString().contains(expected),
-                "La taula no conté l'element esperat:\n " + hashTable + "\n");
+                "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
     }
 
 
@@ -89,7 +90,7 @@ public class HashTablePutTest {
         hashTable.put(key, value);
         expected = formatExpectedEntry(primera, primeraValue) + " -> [" + key + ", " + value + "]";
         assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\n");
+                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected:" + expected);
     }
 
 
@@ -126,7 +127,7 @@ public class HashTablePutTest {
         expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + segonaValue + "]";
         expected += " -> [" + key + ", " + value + "]";
         assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\n");
+                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected: " + expected);
     }
 
     /**
@@ -154,7 +155,7 @@ public class HashTablePutTest {
         hashTable.put(key, value);
         expected = formatExpectedEntry(key, value);
         assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra el valor com esperat:\n" + hashTable + "\n");
+                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
 
     }
 
@@ -162,6 +163,34 @@ public class HashTablePutTest {
         Inserir un elements que ja existeix (update) sobre un element
         que si col·lisiona (1a posició) dins una taula no vuida.
      */
+    @Test
+    public void testUpdateElementColisioPrimeraPosTaulaNoBuida() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String segona;
+        String segonaValue;
+
+        segona = hashTable.getCollisionsForKey(primera);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+        String key;
+        String value;
+        String expected;
+        key = primera;
+        value = "prova";
+        hashTable.put(key, value);
+        expected = formatExpectedEntry(key, value) + " -> [" + segona + ", " + segonaValue + "]";
+        assertTrue(hashTable.toString().contains(expected),
+                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+    }
 
     /**
         Inserir un elements que ja existeix (update)
