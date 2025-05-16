@@ -177,7 +177,14 @@ public class HashTable {
         }
     }
 
+    /*
     private int getHash(String key) {
+        // piggy backing on java string
+        // hashcode implementation.
+        return key.hashCode() % SIZE;
+    }*/
+    // Comentari: Modificat de private a public per permetre proves unitàries amb "getCollisionsForKey()" extern.
+    public int getHash(String key) {
         // piggy backing on java string
         // hashcode implementation.
         return key.hashCode() % SIZE;

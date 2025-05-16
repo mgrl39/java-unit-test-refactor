@@ -12,4 +12,9 @@ public class HashTableTestHelper {
     public static String formatChainedEntry(String key, String value) {
         return " -> [" + key + ", " + value + "]";
     }
+
+    public static String valueCountNotCorrect(int expected, int actual) {
+        return "El valor del compte no es correcte. \nExpected:" + expected + "\nActual: " + actual;
+    }
+
 }
