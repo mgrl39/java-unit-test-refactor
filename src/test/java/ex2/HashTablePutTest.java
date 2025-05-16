@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static ex2.HashTableTestHelper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //   S'ha de fer servir el mètode "put" generar les següents situacions:
@@ -21,21 +22,13 @@ public class HashTablePutTest {
          una taula vuida (sense elements).
      */
     @Test
-    public void testInserirElementNoColisioTaulaBuida() {
-        String expected;
-        String key;
-        String value;
-        HashTable hashTable;
+    public void putElementNoColTaulaBuida () {
+        final String key = "clau";
+        final String value = "valor";
 
-        key = "abc";
-        value = "prova";
-        hashTable = new HashTable();
-        hashTable.put(key, value);
-
-        expected = formatExpectedEntry(key, value);
-        // System.out.println(expected);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
+        HashTable hashTable = createTableWithOneElement(key, value);
+        String expected = formatExpectedEntry(key, value);
+        assertEquals(hashTable.toString(), expected, errorMessage(expected, hashTable.toString()));
     }
 
     /**
@@ -43,94 +36,60 @@ public class HashTablePutTest {
         una taula no vuida (amb elements).
      */
     @Test
-    public void testInserirElementNoColisioTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
-
-        // Elements previs (no col·lisionen amb "abc")
+    public void putElementNoColTaulaNoBuida() {
         Map<String, String> dades = Map.of(
                 "fer", "m03",
                 "david", "m05",
                 "yago", "m12"
-        );
-        dades.forEach(hashTable::put);
+        ); // Elements previs (no col·lisionen amb "abc")
+        HashTable hashTable = createTableWithMultipleElements(dades);
 
-        String key;
-        String value;
-        String expected;
+        final String key = "clau";
+        final String value = "valor";
 
-        key = "abc";
-        value = "prova";
         hashTable.put(key, value);
-        expected = formatExpectedEntry(key, value);
-        // System.out.printf(hashTable.toString());
-        // Al printf es veu que no col·lisiona.
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
+        final String expected = formatExpectedEntry(key, value);
+        // System.out.printf(hashTable.toString()); // Al printf es veu que no col·lisiona.
+        assertTrue(
+                hashTable.toString().contains(expected),
+                errorMessage(expected, hashTable.toString())
+        );
     }
-
 
     /**
        Inserir un element que col·lisiona dins una taula no vuida,
        que es col·locarà en 2a posició dins el mateix bucket.
      */
     @Test
-    public void testInserirElementColisioSegonaPosTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
+    public void putElementColSegonaPosTaulaNoBuida() {
+        final String key = "clau";
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String primera;
-        String primeraValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
-
-        String key;
-        String value;
-        String expected;
-
-        key = hashTable.getCollisionsForKey(primera); // Per trobar una clau que col·lisiona amb "abc"
-        value = "prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(key, value);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected:" + expected);
+        final String expected = formatBucketChainFromList(key, value, colKeys, value);
+        // System.out.printf(expected);
+        // System.out.println(hashTable.toString());
+        assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
-
 
     /**
         Inserir un element que col·lisiona dins una taula no vuida,
         que es col·locarà en 3a posició dins el mateix bucket.
      */
     @Test
-    public void testInserirElementColisioTerceraPosTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
+    public void putElementColTerceraPosTaulaNoBuida() {
+        final String key = "clau";
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String primera;
-        String primeraValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colKeys);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
-
-        // Demanem dues col·lisions diferents per "fer"
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 2);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String key;
-        String value;
-        String expected;
-
-        key = colls.get(1); // Per trobar una clau que col·lisiona amb "abc"
-        value = "prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(segona, segonaValue);
-        expected += formatChainedEntry(key, value);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra els valors col·lisionats com esperat:\n " + hashTable + "\nExpected: " + expected);
+        final String expected = formatBucketChainFromList(key, value, colKeys, value);
+        // System.out.printf(expected);
+        // System.out.println(hashTable.toString());
+        assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
     /**
@@ -138,28 +97,27 @@ public class HashTablePutTest {
         sobre un element que no col·lisiona dins una taula no vuida.
      */
     @Test
-    public void testUpdateElementNoColisioTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
-
-        // Elements previs (no col·lisionen amb "abc")
+    public void updateElementNoColTaulaNoBuida() {
+        // Elements previs que no col·lisionen amb "clau"
         Map<String, String> dades = Map.of(
                 "fer", "m03",
                 "david", "m05",
                 "yago", "m12"
         );
-        dades.forEach(hashTable::put);
-        hashTable.put("abc", "prova");
-        String key;
-        String value;
-        String expected;
+        HashTable hashTable = createTableWithMultipleElements(dades);
 
-        key = "abc";
-        value = "canvi de la prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(key, value);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+        final String key = "clau";
+        final String initialValue  = "valor";
+        final String updatedValue = "nou valor";
 
+        // Afegim la clau per primera vegada
+        hashTable.put(key, initialValue);
+        // System.out.println(hashTable.toString());
+        // La reassinem amb un valor nou (update)
+        hashTable.put(key, updatedValue);
+        // System.out.println(hashTable.toString());
+        final String expected = formatExpectedEntry(key, updatedValue);
+        assertTrue(hashTable.toString().contains(expected), errorMessage(expected, hashTable.toString()));
     }
 
     /**
