@@ -65,7 +65,7 @@ public class HashTableGetTest {
      * Obtenir un element que col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
     @Test
-    public void testObtenirElementColisioTaulaTerceraPos() {
+    public void getElementColisioTaulaTerceraPos() {
         final String key = "clau";
         final String value = "valor";
         Map<String, String> colMap = new LinkedHashMap<>();
@@ -83,7 +83,7 @@ public class HashTableGetTest {
      * Obtenir un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
      */
     @Test
-    public void testObtenirElementNoExisteixPosBuida() {
+    public void getElementNoExisteixPosBuida() {
         final String key = "clau";
         HashTable hashTable = createEmptyTable();
         final String msg = String.format("S'esperava NULL perquè la clau %s no existeix", key);
@@ -95,7 +95,7 @@ public class HashTableGetTest {
      * Obtenir un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
      */
     @Test
-    public void testObtenirElementNoExisteixPosOcupadaPerAltreNoCol() {
+    public void getElementNoExisteixPosOcupadaPerAltreNoCol() {
         final String key = "clau";
         final String value = "valor";
         HashTable hashTable = createTableWithOneElement(key, value);
@@ -111,42 +111,23 @@ public class HashTableGetTest {
      * Obtenir un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.
      */
     @Test
-    public void testObtenirElementQueNoExisteixPosOcupadaPerElementsCol() {
-        HashTable hashTable = new HashTable();
+    public void getElementQueNoExisteixPosOcupadaPerElementsCol() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String primera;
-        String primeraValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
+        String missingKey = null;
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
-
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String tercera;
-        String terceraValue;
-        tercera = colls.get(1);
-        terceraValue = "m12";
-        hashTable.put(tercera, terceraValue);
-
-        String key;
-        String msg;
-        String result;
-        key = colls.get(2); // No s'afegeix
-        result = hashTable.get(key);
-        msg = String.format("S'esperava NULL perquè la clau %s no existeix, pero s'ha retornat %s",
-                key, result);
-        /*
-        if (result != null) {
-            System.out.printf("%s\n%s\n", msg, result);
-        } else System.out.printf("result es null\nKey: %s\n", key);
-        */
-        //System.out.printf(hashTable.toString());
-        assertNull(result, msg);
+        ArrayList<String> colCandidates = hashTable.getCollisionsForKey(key, 5);
+        for (int i = 0; i < colCandidates.size(); i++) {
+            if (!colMap.containsKey(colCandidates.get(i))) {
+                missingKey = colCandidates.get(i);
+                break ;
+            }
+        }
+        final String[] msg = { "No trobada una clau col·lisionada no insertada", "S'esperava null perque la clau no existeix pero col·lisiona amb altres;",  };
+        assertNotNull(missingKey, msg[0]);
+        assertNull(hashTable.get(missingKey), msg[1]);
     }
 }
