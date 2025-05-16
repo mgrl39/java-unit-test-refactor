@@ -125,32 +125,18 @@ public class HashTablePutTest {
         que si col·lisiona (1a posició) dins una taula no vuida.
      */
     @Test
-    public void testUpdateElementColisioPrimeraPosTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
+    public void updateElementColPrimeraPosTaulaNoBuida() {
+        final String key = "clau";
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String primera;
-        String primeraValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
+        final String updatedValue = "nou valor";
+        hashTable.put(key, updatedValue);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
-
-        String segona;
-        String segonaValue;
-
-        segona = hashTable.getCollisionsForKey(primera);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String key;
-        String value;
-        String expected;
-        key = primera;
-        value = "prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(key, value) + formatChainedEntry(segona, segonaValue);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+        final String expected = formatBucketChainFromList(key, updatedValue, colKeys, value);
+        // System.out.printf(expected);
+        assertTrue(hashTable.toString().contains(expected), errorMessage(expected, hashTable.toString()));
     }
 
     /**
@@ -159,42 +145,27 @@ public class HashTablePutTest {
         (2a posició) dins una taula no vuida.
      */
     @Test
-    public void testUpdateElementColisioSegonaPosTaulaNoBuida() {
-        HashTable hashTable = new HashTable();
+    public void updateElementColSegonaPosTaulaNoBuida() {
+        final String key = "clau"; // primera clau, entrada al bucket
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String primera;
-        String primeraValue;
+        // Ara a colKeys tindrem un colKey.get(0) que es la segona entrada al bucket (primer col·lisionat)
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
+        // Actualitcem el segon element (col·lideix en 2a posicio)
+        final String updatedValue = "nou valor";
+        // La key del primer element es key, pero a partir del segon estan en colKeys
+        hashTable.put(colKeys.get(0), updatedValue);
 
-        // Demanem dues col·lisions diferents per "fer"
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 2);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
+        String[] pairs = {
+          colKeys.get(0), updatedValue
+        };
 
-
-        String tercera;
-        String terceraValue;
-        tercera = colls.get(1);
-        terceraValue = "prova";
-        hashTable.put(tercera, terceraValue);
-
-        String key;
-        String value;
-        String expected;
-
-        key = segona;
-        value = "canvi de la prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + " -> [" + segona + ", " + value + "]";
-        expected += " -> [" + tercera + ", " + terceraValue + "]";
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+        final String expected = formatBucketChain(key, value, pairs);
+        // System.out.printf(expected);
+        // System.out.printf(hashTable.toString());
+        assertTrue(hashTable.toString().contains(expected), errorMessage(expected, hashTable.toString()));
     }
 
     /**
@@ -204,47 +175,27 @@ public class HashTablePutTest {
     */
     @Test
     public void testUpdateElementColisioTerceraPosTaulaNobuida() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String primera;
-        String primeraValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colKeys);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
+        // Actualitcem el segon element (col·lideix en 3a posicio)
+        final String updatedValue = "nou valor";
+        // 0 es la segona pos, 1 es la tercera.
+        hashTable.put(colKeys.get(1), updatedValue);
 
-        // Demanem tres col·lisions diferents per fer
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String tercera;
-        String terceraValue;
-        tercera = colls.get(1);
-        terceraValue = "m12";
-        hashTable.put(tercera, terceraValue);
-
-        String quarta;
-        String quartaValue;
-        quarta = colls.get(2);
-        quartaValue = "m00";
-        hashTable.put(quarta, quartaValue);
-
-        String key;
-        String value;
-        String expected;
-
-        key = tercera;
-        value = "canvi de la prova";
-        hashTable.put(key, value);
-        expected = formatExpectedEntry(primera, primeraValue) + formatChainedEntry(segona, segonaValue);
-        expected += formatChainedEntry(key, value) + formatChainedEntry(quarta, quartaValue);
-        // System.out.printf("%s", expected);
-        assertTrue(hashTable.toString().contains(expected),
-                "La taula no mostra el valor com esperat:\n" + hashTable + "\nExpected: " + expected);
+        // key: 1a posició al bucket
+        // colKeys.get(0): 2a posició (1a col·lisió)
+        // colKeys.get(1): 3a posició (2a col·lisió) -> actualitzem aquest
+        String[] pairs = {
+                colKeys.get(0), value,
+                colKeys.get(1), updatedValue
+        };
+        final String expected = formatBucketChain(key, value, pairs);
+        // System.out.printf(expected);
+        assertTrue(hashTable.toString().contains(expected), errorMessage(expected, hashTable.toString()));
     }
 
 }
