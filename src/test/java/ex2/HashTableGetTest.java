@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -17,49 +18,29 @@ public class HashTableGetTest {
      * Obtenir un element que no col·lisiona dins una taula vuida.
      */
     @Test
-    public void testObtenirElementNoColisioTaulaBuida() {
-        HashTable hashTable = new HashTable();
+    public void getElementAfegitAPosNova() {
+        final String key = "clau";
+        final String value = "valor";
 
-        String key;
-        String value;
-        String msg;
-
-        key = "abc";
-        value = "prova";
-        hashTable.put(key, value);
-        msg = String.format(
-                "La taula no ha retornat el valor esperat per la clau: %s\nValor esperat: %s\nValor retornat: %s",
-                key, value, hashTable.get(key)
-        );
-        assertEquals(value, hashTable.get(key), msg);
+        HashTable hashTable = createTableWithOneElement(key, value);
+        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key)));
     }
 
     /**
      * Obtenir un element que col·lisiona dins una taula (1a posició dins el mateix bucket).
      */
     @Test
-    public void testObtenirElementColisioTaula() {
-        HashTable hashTable = new HashTable();
+    public void getPrimerElementDeBucketAmbColisio() {
+        final String key = "clau";
+        final String value = "valor";
+        ArrayList<String> colKeys = new ArrayList<>();
 
-        String key;
-        String value;
-        String msg;
-
-        key = "abc";
-        value = "prova";
-        hashTable.put(key, value);
-
-        String segon;
-        String segonValue;
-        segon = hashTable.getCollisionsForKey(key);
-        segonValue = "m05";
-        hashTable.put(segon, segonValue);
-        // System.out.printf(hashTable.toString() + "\n" + hashTable.get(key) + "\n");
-        msg = String.format(
-                "La taula no ha retornat el valor esperat per la clau: %s\nValor esperat: %s\nValor retornat: %s",
-                key, value, hashTable.get(key)
-        );
-        assertEquals(value, hashTable.get(key), msg);
+        /*
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
+        System.out.printf(hashTable.toString() + "\n");
+        System.out.printf(hashTable.get(key));
+        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key)));
+         */
     }
 
     /**

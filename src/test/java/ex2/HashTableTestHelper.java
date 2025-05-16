@@ -39,15 +39,16 @@ public class HashTableTestHelper {
         return ht;
     }
 
-    public static HashTable createTableWithCollisions(String baseKey, String baseValue, int numCollisions, ArrayList<String> collisionKeysOut) {
+    public static HashTable createTableWithCollisions(String baseKey, String baseValue, int numCollisions, Map<String, String> collisionKeyValueMap) {
         HashTable ht = new HashTable();
         ht.put(baseKey, baseValue);
 
         ArrayList<String> colls = ht.getCollisionsForKey(baseKey, numCollisions);
         for (int i = 0 ; i < numCollisions ; i++) {
             String colKey = colls.get(i);
-            ht.put(colKey, baseValue);
-            collisionKeysOut.add(colKey);
+            String colValue = baseValue + "_" + (i + 2);
+            ht.put(colKey, colValue);
+            collisionKeyValueMap.put(colKey, colValue);
         }
         return ht;
     }
@@ -84,5 +85,18 @@ public class HashTableTestHelper {
         return "\nLa taula no conté l'element esperat.\nExpected:\n" + expected + "\nActual:\n" + actual;
     }
 
+    public static String[] mapToKeyValueArray(Map<String, String> map) {
+        String[] result = new String[map.size() * 2];
+        int i = 0;
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            result[i++] = entry.getKey();
+            result[i++] = entry.getValue();
+        }
+        return result;
+    }
+
+    public static ArrayList<Map.Entry<String, String>> getCollisionEntries(Map<String, String> map) {
+        return new ArrayList<>(map.entrySet());
+    }
 
 }

@@ -9,6 +9,8 @@ package ex2;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import static ex2.HashTableTestHelper.*;
@@ -64,37 +66,36 @@ public class HashTablePutTest {
     public void putElementColSegonaPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
-
-        final String expected = formatBucketChainFromList(key, value, colKeys, value);
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
+        final String expected = formatBucketChain(key, value, mapToKeyValueArray(colMap));
         // System.out.printf(expected);
         // System.out.println(hashTable.toString());
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
+
     /**
-        Inserir un element que col·lisiona dins una taula no vuida,
-        que es col·locarà en 3a posició dins el mateix bucket.
+     Inserir un element que col·lisiona dins una taula no vuida,
+     que es col·locarà en 3a posició dins el mateix bucket.
      */
     @Test
     public void putElementColTerceraPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        HashTable hashTable = createTableWithCollisions(key, value, 2, colKeys);
-
-        final String expected = formatBucketChainFromList(key, value, colKeys, value);
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
+        final String expected = formatBucketChain(key, value, mapToKeyValueArray(colMap));
         // System.out.printf(expected);
         // System.out.println(hashTable.toString());
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
     /**
-        Inserir un elements que ja existeix (update)
-        sobre un element que no col·lisiona dins una taula no vuida.
+     Inserir un elements que ja existeix (update)
+     sobre un element que no col·lisiona dins una taula no vuida.
      */
     @Test
     public void updateElementNoColTaulaNoBuida() {
@@ -121,45 +122,48 @@ public class HashTablePutTest {
     }
 
     /**
-        Inserir un elements que ja existeix (update) sobre un element
-        que si col·lisiona (1a posició) dins una taula no vuida.
+     Inserir un elements que ja existeix (update) sobre un element
+     que si col·lisiona (1a posició) dins una taula no vuida.
      */
     @Test
     public void updateElementColPrimeraPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         final String updatedValue = "nou valor";
         hashTable.put(key, updatedValue);
 
-        final String expected = formatBucketChainFromList(key, updatedValue, colKeys, value);
+        final String expected = formatBucketChain(key, updatedValue, mapToKeyValueArray(colMap));
         // System.out.printf(expected);
         assertTrue(hashTable.toString().contains(expected), errorMessage(expected, hashTable.toString()));
     }
 
+
     /**
-        Inserir un elements que ja existeix (update)
-        sobre un element que si col·lisiona
-        (2a posició) dins una taula no vuida.
+     Inserir un elements que ja existeix (update)
+     sobre un element que si col·lisiona
+     (2a posició) dins una taula no vuida.
      */
     @Test
     public void updateElementColSegonaPosTaulaNoBuida() {
         final String key = "clau"; // primera clau, entrada al bucket
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String, String> colMap = new LinkedHashMap<>();
 
         // Ara a colKeys tindrem un colKey.get(0) que es la segona entrada al bucket (primer col·lisionat)
-        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
+        // Obtenim la clau de la 1ra col·lisio (segona pos al bucket)
+        String colKey = colMap.keySet().iterator().next();
         // Actualitcem el segon element (col·lideix en 2a posicio)
         final String updatedValue = "nou valor";
         // La key del primer element es key, pero a partir del segon estan en colKeys
-        hashTable.put(colKeys.get(0), updatedValue);
+        hashTable.put(colKey, updatedValue);
 
         String[] pairs = {
-          colKeys.get(0), updatedValue
+                colKey, updatedValue
         };
 
         final String expected = formatBucketChain(key, value, pairs);
@@ -169,29 +173,34 @@ public class HashTablePutTest {
     }
 
     /**
-        Inserir un elements que ja existeix (update)
-        sobre un element que si col·lisiona (3a posició)
-        dins una taula no vuida.
-    */
+     Inserir un elements que ja existeix (update)
+     sobre un element que si col·lisiona (3a posició)
+     dins una taula no vuida.
+     */
     @Test
     public void testUpdateElementColisioTerceraPosTaulaNobuida() {
         final String key = "clau";
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String,String> colMap = new LinkedHashMap<>();
 
-        HashTable hashTable = createTableWithCollisions(key, value, 2, colKeys);
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 
-        // Actualitcem el segon element (col·lideix en 3a posicio)
+        // Obtenim les entrades en una llista ordenada
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+
+        // Accedim a la tercera posicio (2a colisio, pos 3 del bucket)
+        String secondColKey = entries.get(1).getKey();
+
         final String updatedValue = "nou valor";
         // 0 es la segona pos, 1 es la tercera.
-        hashTable.put(colKeys.get(1), updatedValue);
+        hashTable.put(secondColKey, updatedValue);
 
         // key: 1a posició al bucket
         // colKeys.get(0): 2a posició (1a col·lisió)
         // colKeys.get(1): 3a posició (2a col·lisió) -> actualitzem aquest
         String[] pairs = {
-                colKeys.get(0), value,
-                colKeys.get(1), updatedValue
+                entries.get(0).getKey(), entries.get(0).getValue(), // col·lisio 1 (2na pos)
+                entries.get(1).getKey(), updatedValue               // col·lisio 2 (3ra pos --> update)
         };
         final String expected = formatBucketChain(key, value, pairs);
         // System.out.printf(expected);
