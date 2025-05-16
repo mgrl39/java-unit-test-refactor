@@ -96,24 +96,15 @@ public class HashTableGetTest {
      */
     @Test
     public void testObtenirElementNoExisteixPosOcupadaPerAltreNoCol() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        final String value = "valor";
+        HashTable hashTable = createTableWithOneElement(key, value);
 
-        String primera;
-        String primeraValue;
+        // Calculem una clau que col·lisionaria però que no s'ha afegit mai
+        final String clauInexistent = hashTable.getCollisionsForKey(key);
+        final String msg = String.format("S'esperava NULL perquè la clau %s no existeix", clauInexistent);
 
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
-
-        String key;
-        String msg;
-        String result;
-
-        key = hashTable.getCollisionsForKey(primera);
-        result = hashTable.get(key);
-        msg = String.format("S'esperava NULL perquè la clau %s no existeix, pero s'ha retornat %s",
-                key, result);
-        assertNull(result, msg);
+        assertNull(hashTable.get(clauInexistent), msg);
     }
 
     /**
