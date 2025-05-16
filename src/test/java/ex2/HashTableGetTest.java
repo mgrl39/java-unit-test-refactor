@@ -3,6 +3,9 @@ package ex2;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,45 +36,29 @@ public class HashTableGetTest {
     public void getPrimerElementDeBucketAmbColisio() {
         final String key = "clau";
         final String value = "valor";
-        ArrayList<String> colKeys = new ArrayList<>();
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        /*
-        HashTable hashTable = createTableWithCollisions(key, value, 1, colKeys);
-        System.out.printf(hashTable.toString() + "\n");
-        System.out.printf(hashTable.get(key));
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key)));
-         */
     }
 
     /**
      * Obtenir un element que col·lisiona dins una taula (2a posició dins el mateix bucket).
      */
-
-    // TODO: ASK IF I need to put 3 (firstNode) -> (secondNode) -> (lastNode)
     @Test
-    public void testObtenirElementColisioTaulaSegonaPos() {
-        HashTable hashTable = new HashTable();
+    public void getElementColisioTaulaSegonaPos() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String primer;
-        String primerValue;
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
-        primer = "fer";
-        primerValue = "m03";
-        hashTable.put(primer, primerValue);
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
 
-        String key;
-        String value;
-        String msg;
-
-        key = hashTable.getCollisionsForKey(primer);
-        value = "prova que recuperare";
-        hashTable.put(key, value);
-        // System.out.printf(hashTable.toString() + "\n" + hashTable.get(key) + "\n"); // bucket[3] = [fer, m03] -> [3, prova que recuperare]
-        msg = String.format(
-                "La taula no ha retornat el valor esperat per la clau: %s\nValor esperat: %s\nValor retornat: %s",
-                key, value, hashTable.get(key)
-        );
-        assertEquals(value, hashTable.get(key), msg);
+        // Recuperem el valor de la 1a clau col·lisionada (2a posició del bucket)
+        final String expected = entries.get(0).getValue();
+        final String actual = hashTable.get(entries.get(0).getKey());
+        assertEquals(expected, actual, errorMessage(expected, actual));
     }
 
     /**
