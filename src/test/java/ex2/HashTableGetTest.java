@@ -120,10 +120,10 @@ public class HashTableGetTest {
         String missingKey = null;
 
         ArrayList<String> colCandidates = hashTable.getCollisionsForKey(key, 5);
-        for (int i = 0; i < colCandidates.size(); i++) {
-            if (!colMap.containsKey(colCandidates.get(i))) {
-                missingKey = colCandidates.get(i);
-                break ;
+        for (String colCandidate : colCandidates) {
+            if (!colMap.containsKey(colCandidate)) {
+                missingKey = colCandidate;
+                break;
             }
         }
         final String[] msg = { "No trobada una clau col·lisionada no insertada", "S'esperava null perque la clau no existeix pero col·lisiona amb altres;",  };
