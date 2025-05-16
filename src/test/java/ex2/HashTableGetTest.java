@@ -64,43 +64,19 @@ public class HashTableGetTest {
     /**
      * Obtenir un element que col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
-    // TODO: he afegit extra un 4t, preguntar si afectara en alguna forma...
     @Test
     public void testObtenirElementColisioTaulaTerceraPos() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String primer;
-        String primerValue;
-        primer = "fer";
-        primerValue = "m03";
-        hashTable.put(primer, primerValue);
-
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primer, 3);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String key;
-        String value;
-        String msg;
-        key = colls.get(1);
-        value = "m12";
-        hashTable.put(key, value);
-
-        msg = String.format(
-                "La taula no ha retornat el valor esperat per la clau: %s\nValor esperat: %s\nValor retornat: %s",
-                key, value, hashTable.get(key)
-        );
-
-        String quarta;
-        String quartaValue;
-        quarta = colls.get(2);
-        quartaValue = "m00";
-        hashTable.put(quarta, quartaValue);
-
-        assertEquals(value, hashTable.get(key), msg);
+        // Crear una taula amb clau base (pos 1) + 2 col·lisions (posicions 2 i 3)
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        // Recuperem el valor de la 2a clau col·lisionada (3a posició del bucket)
+        final String expected = entries.get(1).getValue();
+        final String actual = hashTable.get(entries.get(1).getKey());
+        assertEquals(expected, actual, errorMessage(expected, actual));
     }
 
     /**
@@ -108,17 +84,11 @@ public class HashTableGetTest {
      */
     @Test
     public void testObtenirElementNoExisteixPosBuida() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        HashTable hashTable = createEmptyTable();
+        final String msg = String.format("S'esperava NULL perquè la clau %s no existeix", key);
 
-        String key;
-        String msg;
-        String result;
-
-        key = "abc";
-        result = hashTable.get(key);
-        msg = String.format("S'esperava NULL perquè la clau %s no existeix, pero s'ha retornat %s",
-                key, result);
-        assertNull(result, msg);
+        assertNull(hashTable.get(key), msg);
     }
 
     /**
