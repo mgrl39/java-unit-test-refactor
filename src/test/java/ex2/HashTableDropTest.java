@@ -153,10 +153,43 @@ public class HashTableDropTest {
     /**
      * Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
      */
+    @Test
+    public void testEsborrarElementNoExisteixPosBuida() {
+        HashTable hashTable = new HashTable();
+
+        String key;
+        key = "fer";
+
+        hashTable.drop(key);
+        assertNull(hashTable.get(key), "S'esperava null perquè no s'ha afegit cap clau amb aquest nom.");
+        assertTrue(hashTable.toString().isBlank(), "La taula hauria d'estar buida.");
+    }
 
     /**
      * Eliminar un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
      */
+    @Test
+    public void testEsborrarElementNoExisteixSevaPosOcupadaPerAltreNoCol() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        String key;
+        key = hashTable.getCollisionsForKey(primera);
+        hashTable.drop(key);
+        assertNull(hashTable.get(key), "S'esperava null perquè no s'ha afegit cap clau amb aquest nom.");
+
+        String expected;
+        String actual;
+        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
+        actual = hashTable.toString();
+        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+    }
 
     /**
      * Eliminar un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.
