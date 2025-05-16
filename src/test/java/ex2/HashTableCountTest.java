@@ -2,6 +2,8 @@ package ex2;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static ex2.HashTableTestHelper.valueCountNotCorrect;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -151,6 +153,69 @@ public class HashTableCountTest {
      * PUT:  Inserir un element que col·lisiona dins una taula no vuida, que es col·locarà en 3a posició dins el mateix bucket.
      * DROP: Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
+    @Test
+    public void testComptarInserirElementColDinsTaulaNoBuidaTerceraPosDespresEsborrar() {
+        HashTable hashTable = new HashTable();
+
+        // Encara no hi ha elements
+        assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
+
+        // Afegeixo el primer element
+        String primera;
+        String primeraValue;
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+        // Revisar el compte (ha de ser 1)
+        assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
+
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
+        String segona;
+        String segonaValue;
+        segona = colls.get(0);
+        segonaValue = "segona value";
+        hashTable.put(segona, segonaValue);
+        // Revisar el compte (ha de ser 2)
+        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+
+        String key;
+        String value;
+        key = colls.get(1);
+        value = "Aquest l'esborrare";
+        hashTable.put(key, value);
+        // Revisar el compte (ha de ser 3)
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+
+        String unExtra;
+        String unExtraValue;
+        unExtra = colls.get(2);
+        unExtraValue = "un mes...";
+        hashTable.put(unExtra, unExtraValue);
+        // Revisar el compte (ha de ser 4)
+        assertEquals(4, hashTable.count(), valueCountNotCorrect(4, hashTable.count()));
+
+        // System.out.printf("ACTUAL: %s\n", hashTable.toString());
+
+        // Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
+        hashTable.drop(key);
+
+        assertNull(hashTable.get(key), "S'esperava que la clau " + key + " hagues desaparegut.");
+        // Revisar el compte (ha de ser 3 per l'extra que he afegit anteriorment)
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+
+        String expected;
+        String actual;
+        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
+        expected += HashTableTestHelper.formatChainedEntry(segona, segonaValue);
+        expected += HashTableTestHelper.formatChainedEntry(unExtra, unExtraValue);
+
+        actual = hashTable.toString();
+        // System.out.printf(actual);
+        assertEquals(expected, actual, "No s'esperava que la llista fos d'aquesta manera. \nExpected: " + expected + "\nActual: " + actual);
+        assertNotNull(hashTable.get(primera), "S'esperava que la primera segueixi sent accessible");
+        assertNotNull(hashTable.get(segona), "S'esperava que la segona segueixi sent accessible");
+        assertNotNull(hashTable.get(unExtra), "S'esperava que l'element extra segueixi sent accessible");
+    }
 
 
     /**
