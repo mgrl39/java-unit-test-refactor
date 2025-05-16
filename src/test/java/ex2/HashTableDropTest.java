@@ -188,10 +188,53 @@ public class HashTableDropTest {
         String actual;
         expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
         actual = hashTable.toString();
+        // System.out.printf("ACTUAL: %s\n", actual);
+        // System.out.printf("EXPECTED: %s\n", expected);
         assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
     }
 
     /**
      * Eliminar un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.
      */
+    @Test
+    public void testEsborrarElementNoExisteixSevaPosOcupadaPerTresElementsColisionats() {
+        HashTable hashTable = new HashTable();
+
+        String primera;
+        String primeraValue;
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+
+        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
+        String segona;
+        String segonaValue;
+
+        segona = colls.get(0);
+        segonaValue = "m05";
+        hashTable.put(segona, segonaValue);
+
+        String tercera;
+        String terceraValue;
+        tercera = colls.get(1);
+        terceraValue = "m12";
+        hashTable.put(tercera, terceraValue);
+
+        String key;
+        key = colls.get(2); // No ficare aquesta!
+        assertNull(hashTable.get(key), "S'esperava null perquè no s'ha afegit cap clau amb aquest nom.");
+        hashTable.drop(key);
+        assertNull(hashTable.get(key), "S'esperava null perquè no s'ha afegit cap clau amb aquest nom.");
+
+        String expected;
+        String actual;
+
+        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
+        expected += HashTableTestHelper.formatChainedEntry(segona, segonaValue);
+        expected += HashTableTestHelper.formatChainedEntry(tercera, terceraValue);
+        actual = hashTable.toString();
+        // System.out.printf("ACTUAL: %s\n", actual);
+        // System.out.printf("EXPECTED: %s\n", expected);
+        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+    }
 }
