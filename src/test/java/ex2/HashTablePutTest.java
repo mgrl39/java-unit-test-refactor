@@ -33,6 +33,7 @@ public class HashTablePutTest {
         hashTable.put(key, value);
 
         expected = formatExpectedEntry(key, value);
+        // System.out.println(expected);
         assertTrue(hashTable.toString().contains(expected),
                 "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
     }
@@ -61,6 +62,8 @@ public class HashTablePutTest {
         value = "prova";
         hashTable.put(key, value);
         expected = formatExpectedEntry(key, value);
+        // System.out.printf(hashTable.toString());
+        // Al printf es veu que no col·lisiona.
         assertTrue(hashTable.toString().contains(expected),
                 "La taula no conté l'element esperat:\n " + hashTable + "\nExpected: " + expected);
     }
