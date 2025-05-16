@@ -187,7 +187,7 @@ public class HashTable {
     public int getHash(String key) {
         // piggy backing on java string
         // hashcode implementation.
-        return key.hashCode() % SIZE;
+        return Math.floorMod(key.hashCode(), SIZE);
     }
 
     private class HashEntry {

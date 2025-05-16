@@ -222,6 +222,56 @@ public class HashTableCountTest {
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que no col·lisiona dins una taula no vuida.
      * DROP: Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
      */
+    @Test
+    public void testComptarUpdateElementNoColTablaNoBuidaEliminarElementNoExisteixPosBuida() {
+        HashTable hashTable = new HashTable();
+
+        // Aquest primer element es per complir que la taula no es buida.
+        String primera;
+        String primeraValue;
+        primera = "fer";
+        primeraValue = "m03";
+        hashTable.put(primera, primeraValue);
+        // La taula ara no hauria d'estar buida
+        assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
+
+
+        String key;
+        String value;
+        key = "prova";
+        value = "key value";
+        // System.out.printf("Hash de la primera: %s\nHash de la segona: %s\n", hashTable.getHash(primera), hashTable.getHash(key));
+        assertNotEquals(hashTable.getHash(primera), hashTable.getHash(key), "S'esperava que fossin de diferent bucket");
+
+        // Insereixo l'element per després fer la prova
+        hashTable.put(key, value);
+        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+
+        // System.out.printf(hashTable.toString());
+        // Inserir un elements que ja existeix (update) sobre un element que no col·lisiona dins una taula no vuida.
+        value = "canvio el value del key";
+        hashTable.put(key, value);
+
+        // El count no hauria de canviar perque s'ha realitzat un UPDATE sobre un element, no afegit.
+        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+
+        // Si es realitza un get del key hauria de donar el valor de value
+        assertEquals(value, hashTable.get(key), "S'esperava que el valor del key");
+
+        // Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
+        String segonaKey;
+        segonaKey = "temari";
+        // fent el hash de temari m'he adonat compte de que el getHash pot donar negatius per tant peta el meu test.
+        // System.out.printf("Hash de la primera: %s\nHash de la segona: %s\nHash de la tercera: %s\n", hashTable.getHash(primera), hashTable.getHash(key), hashTable.getHash(segonaKey));
+        assertNotEquals(hashTable.getHash(primera), hashTable.getHash(segonaKey), "S'esperava que fossin de diferent bucket");
+        assertNotEquals(hashTable.getHash(key), hashTable.getHash(segonaKey), "esperava que fossin de diferent bucket");
+        // Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket
+        // System.out.printf(hashTable.toString());
+        hashTable.drop(segonaKey);
+        // System.out.printf(hashTable.toString());
+        // Com hem eliminat un element que no existeix no s'hauria de haver fet res. Per tant, no s'hauria d'haver restat el compte
+        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+    }
 
 
     /**
