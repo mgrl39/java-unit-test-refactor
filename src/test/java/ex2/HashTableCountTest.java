@@ -180,6 +180,7 @@ public class HashTableCountTest {
 
     /**
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (2a posició) dins una taula no vuida.
+     * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (3a posició) dins una taula no vuida.
      * DROP: Eliminar un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.
      */
     @Test
@@ -197,6 +198,10 @@ public class HashTableCountTest {
         assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
         // System.out.printf(hashTable.toString());
 
+        // Update sobre un element que col en tercera pos
+        hashTable.put(entries.get(1).getKey(), "NOU VALOR, BONA NIT!");
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+
         // Eliminar un elements que no existeix,
         // tot i que la seva posició està ocupada per 3 elements col·lisionats.
         final String missingKey = getUnusedCollisionKey(hashTable, key, colMap);
@@ -205,8 +210,4 @@ public class HashTableCountTest {
         // System.out.printf(hashTable.toString());
     }
 
-    
-    /**
-     * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (3a posició) dins una taula no vuida.
-     */
 }
