@@ -39,7 +39,7 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
      */
     @Test
-    public void testCountPutElementNoColDinsTaulaNoBuidaDespresDropElPrimer() {
+    public void countPutElementNoColDinsTaulaNoBuidaDespresDropElPrimer() {
         final String key = "clau";
         final String value = "valor";
         Map<String, String> colMap = new LinkedHashMap<>();
@@ -57,8 +57,8 @@ public class HashTableCountTest {
 
         // Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
         hashTable.drop(key); // Ara hauria de ser dos el count
-        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
         // System.out.printf(hashTable.toString());
+        assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
     }
 
     /**
@@ -66,7 +66,7 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que si col·lisiona dins una taula (2a posició dins el mateix bucket).
      */
     @Test
-    public void countPutElementColDinsTaulaNoBuidaSegonaPosDrop() {
+    public void countPutElementColDinsTaulaNoBuidaSegonaPosDropSegon() {
         final String key = "clau";
         final String value = "valor";
         HashTable hashTable = createTableWithOneElement(key, value);
@@ -93,7 +93,7 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
     @Test
-    public void testComptarInserirElementColDinsTaulaNoBuidaTerceraPosDespresEsborrar() {
+    public void countPutElementColDinsTaulaNoBuidaTerceraPosDespresDropPrimer() {
         HashTable hashTable = new HashTable();
 
         // Encara no hi ha elements
