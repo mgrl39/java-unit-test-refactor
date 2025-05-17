@@ -3,8 +3,11 @@ package ex2;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import static ex2.HashTableTestHelper.createTableWithOneElement;
+import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -35,31 +38,16 @@ public class HashTableDropTest {
      */
     @Test
     public void testEsborrarElementColisionaDinsUnaTaulaPrimeraPos() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String key;
-        String value;
-
-        key = "fer";
-        value = "m03";
-        hashTable.put(key, value);
-
-        String segona;
-        String segonaValue;
-
-        segona = hashTable.getCollisionsForKey(key);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
         hashTable.drop(key);
 
-        String expected;
-        String msg;
-        expected = HashTableTestHelper.formatExpectedEntry(segona, segonaValue);
-        msg = "S'esperava que la clau " + key + " ja no hi fos.";
-        assertNull(hashTable.get(key), "S'esperava que la clau " + key + " ja no hi fos.");
-        // System.out.printf("ESPERAT: " + expected + "\nRESULTAT: " + hashTable.toString());
-        // if (hashTable.toString().isBlank()) System.out.println("que??");
-        assertEquals(expected, hashTable.toString(), msg);
+        final String expected = formatExpectedEntry(entries.get(0).getKey(), entries.get(0).getValue());
+        assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
     /**
