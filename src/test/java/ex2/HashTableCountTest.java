@@ -2,10 +2,7 @@ package ex2;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -144,6 +141,7 @@ public class HashTableCountTest {
         assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
     }
 
+
     /**
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (1a posició) dins una taula no vuida.
      * DROP: Eliminar un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
@@ -184,8 +182,30 @@ public class HashTableCountTest {
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (2a posició) dins una taula no vuida.
      * DROP: Eliminar un elements que no existeix, tot i que la seva posició està ocupada per 3 elements col·lisionats.
      */
+    @Test
+    public void countUpdateSegonElementSiColisionaDropElementNoExisteixSevaPosOcupada() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
 
+        // Update sobre un element que col en segona pos
+        hashTable.put(entries.get(0).getKey(), "NOU VALOR, BON DIA!");
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+        // System.out.printf(hashTable.toString());
+
+        // Eliminar un elements que no existeix,
+        // tot i que la seva posició està ocupada per 3 elements col·lisionats.
+        final String missingKey = getUnusedCollisionKey(hashTable, key, colMap);
+        hashTable.drop(missingKey);
+        assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+        // System.out.printf(hashTable.toString());
+    }
+
+    
     /**
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (3a posició) dins una taula no vuida.
      */
