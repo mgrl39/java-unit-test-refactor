@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 public class HashTableTestHelper {
+
+    public static final int HASH_TABLE_SIZE = 16;
+
     public static int getBucketIndex(String k) {
         return Math.floorMod(k.hashCode(), 16);
     }
@@ -19,6 +22,10 @@ public class HashTableTestHelper {
 
     public static String valueCountNotCorrect(int expected, int actual) {
         return "El valor del compte no es correcte. \nExpected:" + expected + "\nActual: " + actual;
+    }
+
+    public static String valueSizeNotCorrect(int expected, int actual) {
+        return "El valor del size no es correcte. \nExpected:" + expected + "\nActual: " + actual;
     }
 
     /* Crea una taula de hash buida */
