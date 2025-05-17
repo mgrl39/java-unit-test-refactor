@@ -22,32 +22,28 @@ public class HashTable {
         return this.SIZE;
     }
 
-    /** // PUT ORIGINAL "ESBORRAT"
-     * Permet afegir un nou element a la taula.
-     * @param key La clau de l'element a afegir.
-     * @param value El propi element que es vol afegir.
-    public void put(String key, String value) {
-        int hash = getHash(key);
-        final original.HashTable.HashEntry hashEntry = new original.HashTable.HashEntry(key, value);
-
-        if(entries[hash] == null) {
-            entries[hash] = hashEntry;
-        }
-        else {
-            original.HashTable.HashEntry temp = entries[hash];
-            while(temp.next != null)
-                temp = temp.next;
-
-            temp.next = hashEntry;
-            hashEntry.prev = temp;
-        }
-    }
-     */
-
     /**
      * Permet afegir un nou element a la taula.
      * @param key La clau de l'element a afegir.
      * @param value El propi element que es vol afegir.
+     */
+    /*
+            public void put(String key, String value) {
+            int hash = getHash(key);
+            final HashEntry hashEntry = new HashEntry(key, value);
+
+            if(entries[hash] == null) {
+                entries[hash] = hashEntry;
+            }
+            else {
+                HashEntry temp = entries[hash];
+                while(temp.next != null)
+                    temp = temp.next;
+
+                temp.next = hashEntry;
+                hashEntry.prev = temp;
+            }
+        } 
      */
     public void put(String key, String value) {
         int hash = getHash(key);
@@ -57,14 +53,6 @@ public class HashTable {
             entries[hash] = hashEntry;
             ITEMS++;
         } else {
-            /*
-            HashEntry temp = entries[hash];
-            while(temp.next != null)
-                temp = temp.next;
-
-            temp.next = hashEntry;
-            hashEntry.prev = temp;
-             */
             HashEntry temp = entries[hash];
             while (temp != null) {
                 if (temp.key.equals(key)) {
@@ -81,12 +69,27 @@ public class HashTable {
             }
         }
     }
-
+    
     /**
      * Permet recuperar un element dins la taula.
      * @param key La clau de l'element a trobar.
      * @return El propi element que es busca (null si no s'ha trobat).
      */
+     /*
+        public String get(String key) {
+            int hash = getHash(key);
+            if(entries[hash] != null) {
+                HashEntry temp = entries[hash];
+
+                while( !temp.key.equals(key))
+                    temp = temp.next;
+
+                return temp.value;
+            }
+
+            return null;
+        }
+      */
     public String get(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
@@ -103,9 +106,13 @@ public class HashTable {
         return null;
     }
 
+
     /**
-     * DROP ORIGINAL "ESBORRAT"
-    public void drop(String key) {
+     * Permet esborrar un element dins de la taula.
+     * @param key La clau de l'element a trobar.
+     */
+    /*
+         public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
@@ -120,32 +127,6 @@ public class HashTable {
             }
         }
     }
-     */
-
-    /** // DROP ORIGINAL "ESBORRAT"
-     * Permet esborrar un element dins de la taula.
-     * @param key La clau de l'element a trobar.
-
-    public void drop(String key) {
-        int hash = getHash(key);
-        if(entries[hash] != null) {
-
-            original.HashTable.HashEntry temp = entries[hash];
-            while( !temp.key.equals(key))
-                temp = temp.next;
-
-            if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
-            else{
-                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
-                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
-            }
-        }
-    }
-     */
-
-    /**
-     * Permet esborrar un element dins de la taula.
-     * @param key La clau de l'element a trobar.
      */
     public void drop(String key) {
         int hash = getHash(key);
@@ -183,8 +164,7 @@ public class HashTable {
         // hashcode implementation.
         return key.hashCode() % SIZE;
     }*/
-    // Comentari: Modificat de private a public per permetre proves unitàries amb "getCollisionsForKey()" extern.
-    public int getHash(String key) {
+    private int getHash(String key) {
         // piggy backing on java string
         // hashcode implementation.
         return Math.floorMod(key.hashCode(), SIZE);
