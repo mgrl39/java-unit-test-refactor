@@ -117,17 +117,8 @@ public class HashTableGetTest {
         Map<String, String> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
-        String missingKey = null;
 
-        ArrayList<String> colCandidates = hashTable.getCollisionsForKey(key, 5);
-        for (String colCandidate : colCandidates) {
-            if (!colMap.containsKey(colCandidate)) {
-                missingKey = colCandidate;
-                break;
-            }
-        }
-        final String[] msg = { "No trobada una clau col·lisionada no insertada", "S'esperava null perque la clau no existeix pero col·lisiona amb altres;",  };
-        assertNotNull(missingKey, msg[0]);
-        assertNull(hashTable.get(missingKey), msg[1]);
+        final String missingKey = getUnusedCollisionKey(hashTable, key, colMap);
+        assertNull(hashTable.get(missingKey),  "S'esperava null perque la clau no existeix pero col·lisionaria amb altres");
     }
 }

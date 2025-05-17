@@ -1,6 +1,7 @@
 package ex2;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HashTableTestHelper {
@@ -53,11 +54,11 @@ public class HashTableTestHelper {
         return ht;
     }
 
-    public static String formatBucketChainFromList(String baseKey, String baseValue, ArrayList<String> keys, String value) {
-        String[] pairs = new String[keys.size() * 2];
-        for (int i = 0; i < keys.size(); i++) {
-            pairs[i * 2] = keys.get(i);
-            pairs[(i * 2) + 1] = value;
+    public static String formatBucketChainFromList(String baseKey, String baseValue, List<Map.Entry<String, String>> entries) {
+        String[] pairs = new String[entries.size() * 2];
+        for (int i = 0; i < entries.size(); i++) {
+            pairs[i * 2] = entries.get(i).getKey();
+            pairs[i * 2 + 1] = entries.get(i).getValue();
         }
         return formatBucketChain(baseKey, baseValue, pairs);
     }
@@ -97,6 +98,16 @@ public class HashTableTestHelper {
 
     public static ArrayList<Map.Entry<String, String>> getCollisionEntries(Map<String, String> map) {
         return new ArrayList<>(map.entrySet());
+    }
+
+    public static String getUnusedCollisionKey(HashTable table, String baseKey, Map<String, String> usedKeys) {
+        List<String> candidates = table.getCollisionsForKey(baseKey, 10);
+        for (String candidate : candidates) {
+            if (!usedKeys.containsKey(candidate) && !candidate.equals(baseKey)) {
+                return candidate;
+            }
+        }
+        throw new RuntimeException("No col·lisions noves s'han trobat");
     }
 
 }
