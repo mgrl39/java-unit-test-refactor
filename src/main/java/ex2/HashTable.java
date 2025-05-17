@@ -28,22 +28,22 @@ public class HashTable {
      * @param value El propi element que es vol afegir.
      */
     /*
-            public void put(String key, String value) {
-            int hash = getHash(key);
-            final HashEntry hashEntry = new HashEntry(key, value);
+    public void put(String key, String value) {
+        int hash = getHash(key);
+        final HashEntry hashEntry = new HashEntry(key, value);
 
-            if(entries[hash] == null) {
-                entries[hash] = hashEntry;
-            }
-            else {
-                HashEntry temp = entries[hash];
-                while(temp.next != null)
-                    temp = temp.next;
+        if(entries[hash] == null) {
+            entries[hash] = hashEntry;
+        }
+        else {
+            HashEntry temp = entries[hash];
+            while(temp.next != null)
+                temp = temp.next;
 
-                temp.next = hashEntry;
-                hashEntry.prev = temp;
-            }
-        } 
+            temp.next = hashEntry;
+            hashEntry.prev = temp;
+        }
+    }
      */
     public void put(String key, String value) {
         int hash = getHash(key);
@@ -76,19 +76,19 @@ public class HashTable {
      * @return El propi element que es busca (null si no s'ha trobat).
      */
      /*
-        public String get(String key) {
-            int hash = getHash(key);
-            if(entries[hash] != null) {
-                HashEntry temp = entries[hash];
+    public String get(String key) {
+        int hash = getHash(key);
+        if(entries[hash] != null) {
+            HashEntry temp = entries[hash];
 
-                while( !temp.key.equals(key))
-                    temp = temp.next;
+            while( !temp.key.equals(key))
+                temp = temp.next;
 
-                return temp.value;
-            }
-
-            return null;
+            return temp.value;
         }
+
+        return null;
+    }
       */
     public String get(String key) {
         int hash = getHash(key);
@@ -112,7 +112,7 @@ public class HashTable {
      * @param key La clau de l'element a trobar.
      */
     /*
-         public void drop(String key) {
+    public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
 
@@ -163,7 +163,8 @@ public class HashTable {
         // piggy backing on java string
         // hashcode implementation.
         return key.hashCode() % SIZE;
-    }*/
+    }
+    */
     private int getHash(String key) {
         // piggy backing on java string
         // hashcode implementation.
