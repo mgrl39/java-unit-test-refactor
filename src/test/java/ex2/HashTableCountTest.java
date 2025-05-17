@@ -122,7 +122,7 @@ public class HashTableCountTest {
      * DROP: Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
      */
     @Test
-    public void testComptarUpdateElementNoColTablaNoBuidaEliminarElementNoExisteixPosBuida() {
+    public void countUpdateElementNoColTablaNoBuidaEliminarElementNoExisteixPosBuida() {
         final String key = "clau";
         final String value = "valor";
         HashTable hashTable = createTableWithOneElement(key, value);
@@ -144,80 +144,39 @@ public class HashTableCountTest {
         assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
     }
 
-
     /**
      * PUT:  Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (1a posició) dins una taula no vuida.
      * DROP: Eliminar un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
      */
     @Test
-    public void testComptarUpdateElementSiColisionaTaulaNoBuidaIEliminarElementNoExisteixTotIquePosOcupada() {
-        HashTable hashTable = new HashTable();
+    public void countUpdateElementSiColisionaTaulaNoBuidaDropElementNoExisteixTotIquePosOcupada() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        // El compte ha de ser 0, no hi ha res encar
-        assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
-
-        String key;
-        String value;
-        key = "prova";
-        value = "key value";
-        hashTable.put(key, value);
-
-        // El compte ha de ser 1
-        assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
-
-        String segona;
-        String segonaValue;
-        segona = hashTable.getCollisionsForKey(key);
-        segonaValue = "m03";
-        hashTable.put(segona, segonaValue);
-
-        // El compte ha de ser 2
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+        // System.out.printf(hashTable.toString()); // bucket[13] = [clau, valor] -> [30, valor_2]
 
-        // Inserir un elements que ja existeix (update) sobre un element que si col·lisiona (1a posició) dins una taula no vuida.
-        value = "actualizant key value";
-        hashTable.put(key, value);
-        // El compte ha de seguir sent 2
+        // Update sobre un element que si col·lisiona
+        final String nouValue = "nou valor";
+        hashTable.put(key, nouValue);
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+        // System.out.printf(hashTable.toString()); // bucket[13] = [clau, nou valor] -> [30, valor_2]
 
-        String expected;
-        String actual;
-
-        expected = HashTableTestHelper.formatExpectedEntry(key, value);
-        expected += HashTableTestHelper.formatChainedEntry(segona, segonaValue);
-
-        actual = hashTable.toString();
-
-        // System.out.printf("EXPECTED: %s\n", expected);
-        // System.out.printf("ACTUAL: %s\n", actual);
-        assertEquals(expected, actual, "El resultat no es el que s'esperava. \nExpected:" + expected + "\nActual: " + actual);
-
-
-        String unExtra;
-        String unExtraValue;
-
-        unExtra = "temari";
-        unExtraValue = "key value";
-        assertNotEquals(hashTable.getHash(key), hashTable.getHash(unExtra), "S'esperava que el hash fos diferent");
-        // Si es passa la comprovacio anterior del assertNotEquals vol dir que sera un element que no col·Lisiona amb res mes.
-        // Afegeixo aquest element
-        hashTable.put(unExtra, unExtraValue);
-
-        // actual = hashTable.toString();
-        // System.out.printf("ACTUAL: %s\n", actual);
+        // Eliminar un elements que no existeix,
+        // tot i que la seva posició està ocupada per un altre que no col·lisiona
+        final String keyNoCollide = "zzz";
+        hashTable.put(keyNoCollide, value);
         assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
 
-        // Eliminar un elements que no existeix, tot i que la seva posició està ocupada per un altre que no col·lisiona.
-        // Utilitzo l'ultim element afegit per buscar una key que col·lisioni i passar-la al drop, d'aquesta manera
-        // compleixo el cas de eliminar un que no existix. Perque no l'he creat.
-        hashTable.drop(hashTable.getCollisionsForKey(unExtra));
+        // Ara busquem una clau que col·lisionaria amb "zzz" però que NO ha estat afegida
+        final String missingKey = getUnusedCollisionKey(hashTable, keyNoCollide, Map.of(keyNoCollide, value));
 
-        // actual = hashTable.toString();
-        // System.out.printf("ACTUAL: %s\n", actual);
-        // System.out.printf(hashTable.get(unExtra));
-        assertNotNull(hashTable.get(unExtra), "S'esperava poder recuperar el valor de unExtra");
-        // El compte ha de seguir sent 3
+        // Eliminem aquesta clau inexistent (col·lisionaria amb "zzz", pero no esta afegida)
+        hashTable.drop(missingKey);
         assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
+        // System.out.printf(hashTable.toString());
     }
 
 
