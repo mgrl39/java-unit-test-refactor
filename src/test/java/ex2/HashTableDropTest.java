@@ -71,49 +71,17 @@ public class HashTableDropTest {
      * Esborrar un element que si col·lisiona dins una taula (3a posició dins el mateix bucket).
      */
     @Test
-    public void testEsborrarElementcolisionaDinsUnaTaulaTerceraPos() {
-        HashTable hashTable = new HashTable();
+    public void dropElementcolisionaDinsUnaTaulaTerceraPos() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String primera;
-        String primeraValue;
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
+        HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        hashTable.drop(entries.get(1).getKey());
 
-        ArrayList<String> colls = hashTable.getCollisionsForKey(primera, 3);
-        String segona;
-        String segonaValue;
-        segona = colls.get(0);
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
-
-        String key;
-        String value;
-        key = colls.get(1);
-        value = "esborrare aquesta!! :)";
-        hashTable.put(key, value);
-
-        String unaMes;
-        String unaMesValue;
-        unaMes = colls.get(2);
-        unaMesValue = "per veure si uneix be...";
-        hashTable.put(unaMes, unaMesValue);
-
-        String expected;
-        String actual;
-        String msg;
-
-        // System.out.printf("ABANS: %s\n", hashTable.toString());
-        hashTable.drop(key);
-        msg = "S'esperava que la clau " + key + " ja no hi fos.";
-        assertNull(hashTable.get(key), msg);
-        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue) + HashTableTestHelper.formatChainedEntry(segona, segonaValue);
-        expected += HashTableTestHelper.formatChainedEntry(unaMes, unaMesValue);
-
-        actual = hashTable.toString();
-        // System.out.printf("ACTUAL: %s\n", actual);
-        // System.out.printf("EXPECTED: %s\n", expected);
-        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+        final String expected = formatBucketChain(key, value, entries.get(0).getKey(), entries.get(0).getValue());
+        assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
     /**
