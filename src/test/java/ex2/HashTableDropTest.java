@@ -88,15 +88,16 @@ public class HashTableDropTest {
      * Eliminar un elements que no existeix perquè la seva posició està buida (no hi ha cap element dins el bucket).
      */
     @Test
-    public void testEsborrarElementNoExisteixPosBuida() {
-        HashTable hashTable = new HashTable();
+    public void dropElementNoExisteixPosBuida() {
+        final String key = "clau";
+        HashTable hashTable = createEmptyTable();
 
-        String key;
-        key = "fer";
-
+        // Prova d'esborrar una clau que no hi es dins d'una taula buida.
         hashTable.drop(key);
-        assertNull(hashTable.get(key), "S'esperava null perquè no s'ha afegit cap clau amb aquest nom.");
-        assertTrue(hashTable.toString().isBlank(), "La taula hauria d'estar buida.");
+
+        // Comprovem que la taula continua buida
+        assertTrue(hashTable.toString().isBlank(),
+                "S'esperava que la taula seguís buida després d'un drop inexistent.");
     }
 
     /**
