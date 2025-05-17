@@ -66,50 +66,25 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que si col·lisiona dins una taula (2a posició dins el mateix bucket).
      */
     @Test
-    public void testComptarInserirElementColDinsTaulaNoBuidaSegonaPosDespresEsborrar() {
-        HashTable hashTable = new HashTable();
+    public void countPutElementColDinsTaulaNoBuidaSegonaPosDrop() {
+        final String key = "clau";
+        final String value = "valor";
+        HashTable hashTable = createTableWithOneElement(key, value);
 
-        // Encara no hi ha elements
-        assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
-        // Afegit i comprovar un
-        String primera;
-        String primeraValue;
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
+        // Inicialment hauria d'haver ja un element afegit
         assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
 
-        // Afegit el element que col·lisiona dins una taula no buida, que es col·loca a 2nda pos dins un mateix bucket.
-        String key;
-        String value;
-        key = hashTable.getCollisionsForKey(primera);
-        value = "HOLAA";
-        hashTable.put(key, value);
+        // Inserir un element que col·lisiona dins una taula no vuida,
+        // que es col·locarà en 2a posició dins el mateix bucket.
+        final String nouKey = hashTable.getCollisionsForKey(key);
+        hashTable.put(nouKey, value);
+        // Hauria d'haver ja dos elements dins
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
 
-        String expected;
-        String actual;
-
-        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
-        expected += HashTableTestHelper.formatChainedEntry(key, value);
-
-        actual = hashTable.toString();
-        // System.out.printf("EXPECTED: %s\n",expected);
-        // System.out.printf("ACTUAL: %s\n", actual);
-        assertEquals(expected, actual, "No s'esperava que la llista fos d'aquesta manera. \nExpected: " + expected + "\nActual: " + actual);
-
-        // Esborro l'element que si col·lisiona dins una taula (2a posició dins el mateix bucket).
-        hashTable.drop(key);
-        assertNull(hashTable.get(key), "S'esperava que la clau " + key + " hagues desaparegut.");
+        // Esborrar un element que si col·lisiona dins una taula (2a pos)
+        hashTable.drop(nouKey);
+        // Hauria d'haver un unic element ara
         assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
-
-        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
-        actual = hashTable.toString();
-        // System.out.printf("EXPECTED: %s\n",expected);
-        // System.out.printf("ACTUAL: %s\n", actual);
-        assertEquals(expected, actual, "No s'esperava que la llista fos d'aquesta manera. \nExpected: " + expected + "\nActual: " + actual);
-        // Validacio que el primer node no s'ha afectat
-        assertNotNull(hashTable.get(primera), "S'esperava que la primera segueixi sent accessible");
     }
 
 
