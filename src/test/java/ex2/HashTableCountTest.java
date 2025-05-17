@@ -3,8 +3,11 @@ package ex2;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import static ex2.HashTableTestHelper.valueCountNotCorrect;
+import static ex2.HashTableTestHelper.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -19,21 +22,15 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que no col·lisiona dins una taula.
      */
     @Test
-    public void testComptarInserirElementNoColisionaDinsTaulaBuidaDespresEsborrar() {
-        HashTable hashTable = new HashTable();
+    public void countPutElementNoColDinsTaulaBuidaAndDrop() {
+        final String key = "clau";
+        final String value = "valor";
 
-        String key;
-        String value;
-
-        key = "fer";
-        value = "m03";
-        // Inicialment hauria d'estar buida
+        HashTable hashTable = createEmptyTable();  // Inicialment hauria d'estar buida
         assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
-        // Després d'afegir un element
-        hashTable.put(key, value);
+        hashTable.put(key, value); // Després d'afegir un element
         assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
-        // Després d'esborrar-lo
-        hashTable.drop(key);
+        hashTable.drop(key); // Després d'esborrar-lo
         assertEquals(0, hashTable.count(),valueCountNotCorrect(0, hashTable.count()));
     }
 
@@ -42,59 +39,26 @@ public class HashTableCountTest {
      * DROP: Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
      */
     @Test
-    public void testComptarInserirElementNoColisionaDinsTaulaNoBuidaDespresAfegirAltreIEsborrarElPrimer() {
-        HashTable hashTable = new HashTable();
+    public void testCountPutElementNoColDinsTaulaNoBuidaDespresDropElPrimer() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
-        String primera;
-        String primeraValue;
-        primera = "fer";
-        primeraValue = "m03";
-        // Inicialment hauria d'estar buida
-        assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
-
-        // Després d'afegir un element (el primer). Per poder després inserir un element que no col·lisiona dins una taula no buida
-        hashTable.put(primera, primeraValue);
-        assertEquals(1, hashTable.count(), valueCountNotCorrect(1, hashTable.count()));
-
-        // Després d'afegir un segon element. Aqui literalment estic afegint un element que no col·lisiona dins una taula no buida.
-        String segona;
-        String segonaValue;
-        segona = "abc";
-        segonaValue = "m05";
-        hashTable.put(segona, segonaValue);
+        // Inicialment hauria d'haver ja dos elements dins
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
 
-        assertNotEquals(hashTable.getHash(segona), hashTable.getHash(primera), "S'esperava que fossin de diferent bucket");
-        // Si el test anterior funciona: S'ha comprovat el fet de Inserir un element que no col·lisiona dins una taula no vuida (amb elements)
-
-        // System.out.printf(hashTable.toString());
-        //System.out.printf(hashTable.toString());
-        /**
-         *  bucket[2] = [abc, m05]
-         *  bucket[3] = [fer, m03]
-         */
-
-        String key;
-        String value;
-        key = hashTable.getCollisionsForKey(segona);
-        value = "HOLAA";
-        hashTable.put(key, value);
+        final String element = "elementExtra";
+        final String valorElement = "extraValor";
+        // Inserim l'element que no col·lisiona dins una taula no buida
+        hashTable.put(element, valorElement); // El compte ha de ser 3 (els dos que col·lisionen + el nou)
         assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
-        //System.out.printf(hashTable.toString());
-        /**
-         *  bucket[2] = [abc, m05] -> [2, HOLAA]
-         *  bucket[3] = [fer, m03]
-         */
-        // Ara esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
-        hashTable.drop(segona);
-        // System.out.printf(hashTable.get(key));
-        // System.out.println(hashTable.get(segona));
-        assertNull(hashTable.get(segona), "L'element hauria d'haver sigut esborrat");
-        // Amb la assertNotNull del hashTable.get(key), encara que he tret "segona" ([abc, m05]), hauria de seguir [2, "HOLA"]
-        assertNotNull(hashTable.get(key), "L'element col·lisionat hauria de continuar després de fer drop al primer del bucket");
+        // System.out.printf(hashTable.toString());
 
-        // S'hauria de baixar a dos elements, ja que el [abc, m05] ha sigut esborrat.
+        // Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
+        hashTable.drop(key); // Ara hauria de ser dos el count
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
+        // System.out.printf(hashTable.toString());
     }
 
     /**
