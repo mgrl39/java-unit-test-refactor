@@ -24,7 +24,7 @@ public class HashTableDropTest {
      * Esborrar un element que no col·lisiona dins una taula.
      */
     @Test
-    public void testEsborrarElementNoColDinsUnaTaula() {
+    public void dropElementNoColDinsUnaTaula() {
         final String key = "clau";
         final String value = "valor";
 
@@ -37,7 +37,7 @@ public class HashTableDropTest {
      * Esborrar un element que si col·lisiona dins una taula (1a posició dins el mateix bucket).
      */
     @Test
-    public void testEsborrarElementColisionaDinsUnaTaulaPrimeraPos() {
+    public void dropElementColisionaDinsUnaTaulaPrimeraPos() {
         final String key = "clau";
         final String value = "valor";
         Map<String, String> colMap = new LinkedHashMap<>();
@@ -54,31 +54,17 @@ public class HashTableDropTest {
      * Esborrar un element que si col·lisiona dins una taula (2a posició dins el mateix bucket).
      */
     @Test
-    public void testEsborrarElementcolisionaDinsUnaTaulaSegonaPos() {
-        HashTable hashTable = new HashTable();
+    public void dropElementColisionaDinsUnaTaulaSegonaPos() {
+        final String key = "clau";
+        final String value = "valor";
+        Map<String, String> colMap = new LinkedHashMap<>();
 
-        String primera;
-        String primeraValue;
-        primera = "fer";
-        primeraValue = "m03";
-        hashTable.put(primera, primeraValue);
+        HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
+        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        hashTable.drop(entries.get(0).getKey());
 
-        String key;
-        String value;
-        String msg;
-
-        key = hashTable.getCollisionsForKey(primera);
-        value = "m05";
-        hashTable.put(key, value);
-        hashTable.drop(key);
-        String expected;
-        String actual;
-        msg = "S'esperava que la clau " + key + " ja no hi fos.";
-
-        assertNull(hashTable.get(key), msg);
-        expected = HashTableTestHelper.formatExpectedEntry(primera, primeraValue);
-        actual = hashTable.toString();
-        assertEquals(expected, actual, "S'esperava altre resposta. \nExpected:" + expected + "\nActual:" + actual);
+        final String expected = formatExpectedEntry(key, value);
+        assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
     }
 
     /**
