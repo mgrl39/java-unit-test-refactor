@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
+import static ex2.HashTableTestHelper.createTableWithOneElement;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
@@ -21,21 +22,12 @@ public class HashTableDropTest {
      */
     @Test
     public void testEsborrarElementNoColDinsUnaTaula() {
-        HashTable hashTable = new HashTable();
+        final String key = "clau";
+        final String value = "valor";
 
-        String key;
-        String value;
-        String result;
-        String msg;
-
-        key = "fer";
-        value = "m03";
-        hashTable.put(key, value);
+        HashTable hashTable = createTableWithOneElement(key, value);
         hashTable.drop(key);
-        result = hashTable.get(key);
-        msg = "S'esperava que la clau " + key + " ja no hi fos.";
-        // assertTrue(hashTable.toString().isBlank());
-        assertNull(result, msg);
+        assertTrue(hashTable.toString().isBlank(), "S'esperava que l'element " + key + " no hi fos.");
     }
 
     /**
