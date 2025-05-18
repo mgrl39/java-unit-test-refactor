@@ -49,27 +49,30 @@ public class HashTable {
         int hash = getHash(key);
         final HashEntry hashEntry = new HashEntry(key, value);
 
-        if(entries[hash] == null) {
+        if (entries[hash] != null) handlePutCollision(key, value, hash, hashEntry);
+        else {
             entries[hash] = hashEntry;
             ITEMS++;
-        } else {
-            HashEntry temp = entries[hash];
-            while (temp != null) {
-                if (temp.key.equals(key)) {
-                    temp.value = value;
-                    return;
-                }
-                if (temp.next == null) {
-                    temp.next = hashEntry;
-                    hashEntry.prev = temp;
-                    this.ITEMS++;
-                    return;
-                };
-                temp = temp.next;
-            }
         }
     }
-    
+
+    private void handlePutCollision(String key, String value, int hash, HashEntry hashEntry) {
+        HashEntry temp = entries[hash];
+        while (temp != null) {
+            if (temp.key.equals(key)) {
+                temp.value = value;
+                return;
+            }
+            if (temp.next == null) {
+                temp.next = hashEntry;
+                hashEntry.prev = temp;
+                this.ITEMS++;
+                return;
+            };
+            temp = temp.next;
+        }
+    }
+
     /**
      * Permet recuperar un element dins la taula.
      * @param key La clau de l'element a trobar.
@@ -93,13 +96,7 @@ public class HashTable {
     public String get(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
-            HashEntry temp = entries[hash];
-
-            // while( !temp.key.equals(key))
-            while(temp != null && !temp.key.equals(key))
-                temp = temp.next;
-
-            // return temp.value;
+            HashEntry temp = findEntryInBucket(key, entries[hash]);
             if (temp != null) return temp.value;
         }
 
@@ -131,31 +128,36 @@ public class HashTable {
     public void drop(String key) {
         int hash = getHash(key);
         if(entries[hash] != null) {
-
             HashEntry temp = entries[hash];
-            // while( !temp.key.equals(key))
-            while(temp != null && !temp.key.equals(key))
-                temp = temp.next;
+            temp = findEntryInBucket(key, temp);
             if (temp == null) return;
+            removeEntry(temp, hash);
+        }
+    }
 
-            if(temp.prev == null) {
-                /// Si entra aqui es el primer de la llista
-                /// Si es compleix la seguent condicio es que no hi ha cap mes al bucket.
-                /// En canvi si hi ha mes, el seguent es converteix en el primer
-                // entries[hash] = null;
-                if (temp.next == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
-                else {
-                    entries[hash] = temp.next;
-                    temp.next.prev = null;
-                }
-                this.ITEMS--;
-            }
-            else{
-                if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
-                temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
-                this.ITEMS--;
+    private void removeEntry(HashEntry temp, int hash) {
+        if(temp.prev == null) {
+            /// Si entra aqui es el primer de la llista
+            /// Si es compleix la seguent condicio es que no hi ha cap mes al bucket.
+            /// En canvi si hi ha mes, el seguent es converteix en el primer
+            // entries[hash] = null;
+            if (temp.next == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+            else {
+                entries[hash] = temp.next;
+                temp.next.prev = null;
             }
         }
+        else{
+            if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
+            temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+        }
+        this.ITEMS--;
+    }
+
+    private HashEntry findEntryInBucket(String key, HashEntry temp) {
+        while(temp != null && !temp.key.equals(key))
+            temp = temp.next;
+        return temp;
     }
 
     /*
@@ -203,20 +205,24 @@ public class HashTable {
                 bucket++;
                 continue;
             }
-
-            hashTableStr.append("\n bucket[")
-                    .append(bucket)
-                    .append("] = ")
-                    .append(entry.toString());
-            bucket++;
-            HashEntry temp = entry.next;
-            while(temp != null) {
-                hashTableStr.append(" -> ");
-                hashTableStr.append(temp.toString());
-                temp = temp.next;
-            }
+            bucket = formatBucket(entry, hashTableStr, bucket);
         }
         return hashTableStr.toString();
+    }
+
+    private static int formatBucket(HashEntry entry, StringBuilder hashTableStr, int bucket) {
+        hashTableStr.append("\n bucket[")
+                .append(bucket)
+                .append("] = ")
+                .append(entry.toString());
+        bucket++;
+        HashEntry temp = entry.next;
+        while(temp != null) {
+            hashTableStr.append(" -> ");
+            hashTableStr.append(temp.toString());
+            temp = temp.next;
+        }
+        return bucket;
     }
 
     /**
@@ -261,8 +267,7 @@ public class HashTable {
         while (foundKeys.size() < quantity){
             //building current key
             String currentKey = "";
-            for(int i = 0; i < newKey.size(); i++)
-                currentKey += alphabet[newKey.get(i)];
+            currentKey = buildCurrentKey(newKey, alphabet);
 
             if(!currentKey.equals(key) && getHash(currentKey) == collision)
                 foundKeys.add(currentKey);
@@ -292,6 +297,13 @@ public class HashTable {
         }
 
         return  foundKeys;
+    }
+
+    private static String buildCurrentKey(ArrayList<Integer> newKey, char[] alphabet) {
+        StringBuilder currentKeyBuilder = new StringBuilder();
+        for(int i = 0; i < newKey.size(); i++)
+            currentKeyBuilder.append(alphabet[newKey.get(i)]);
+        return currentKeyBuilder.toString();
     }
 
     public static void main(String[] args) {
