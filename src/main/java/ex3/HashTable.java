@@ -171,6 +171,7 @@ public class HashTable {
         return Math.floorMod(key.hashCode(), SIZE);
     }
 
+    /**
     private class HashEntry {
         String key;
         String value;
@@ -191,6 +192,7 @@ public class HashTable {
             return "[" + key + ", " + value + "]";
         }
     }
+     */
 
     @Override
     public String toString() {
