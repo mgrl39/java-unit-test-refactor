@@ -29,9 +29,9 @@ jobs:
 
       # Compilar el projecte Maven
       - name: Compilar amb Maven
-        run: mvn -B compile --file pom.xml
+        run: mvn -B compile
 
       # Execucio de proves
       - name: Executar proves
-        run: mvn -B test --file pom.xml
+        run: mvn -B test
 
