@@ -2,7 +2,7 @@ package ex2;
 
 public class Enunciat {
 /*
-    1. Copia la classe HashTable.java del package "original" a "main.java.ex2" i munta-hi un joc de proves per als mètodes "put",
+    1. Copia la classe HashTable.java del package "original" a "ex2" i munta-hi un joc de proves per als mètodes "put",
        "get" , "drop" , "count" i "size". Dins els jocs de proves pots fer servir el mètode "toString" que proporciona
        la taula de hash per a obtenir una cadena de text que representa el seu contingut, el mètode "toString" funciona
        correctament i està lliure d'errors.
