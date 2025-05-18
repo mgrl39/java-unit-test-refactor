@@ -34,14 +34,22 @@ public class HashTable {
 
         if(entries[hash] == null) {
             entries[hash] = hashEntry;
-        }
-        else {
+            ITEMS++;
+        } else {
             HashEntry temp = entries[hash];
-            while(temp.next != null)
+            while (temp != null) {
+                if (temp.key.equals(key)) {
+                    temp.value = value;
+                    return;
+                }
+                if (temp.next == null) {
+                    temp.next = hashEntry;
+                    hashEntry.prev = temp;
+                    this.ITEMS++;
+                    return;
+                };
                 temp = temp.next;
-
-            temp.next = hashEntry;
-            hashEntry.prev = temp;
+            }
         }
     }
      */
@@ -79,19 +87,21 @@ public class HashTable {
      * @return El propi element que es busca (null si no s'ha trobat).
      */
      /*
-    public String get(String key) {
-        int hash = getHash(key);
-        if(entries[hash] != null) {
-            HashEntry temp = entries[hash];
+        public String get(String key) {
+                int hash = getHash(key);
+                if(entries[hash] != null) {
+                    HashEntry temp = entries[hash];
 
-            while( !temp.key.equals(key))
-                temp = temp.next;
+                    // while( !temp.key.equals(key))
+                    while(temp != null && !temp.key.equals(key))
+                        temp = temp.next;
 
-            return temp.value;
-        }
+                    // return temp.value;
+                    if (temp != null) return temp.value;
+                }
 
-        return null;
-    }
+                return null;
+            }
       */
     public String get(String key) {
         int hash = getHash(key);
@@ -114,13 +124,27 @@ public class HashTable {
         if(entries[hash] != null) {
 
             HashEntry temp = entries[hash];
-            while( !temp.key.equals(key))
+            // while( !temp.key.equals(key))
+            while(temp != null && !temp.key.equals(key))
                 temp = temp.next;
+            if (temp == null) return;
 
-            if(temp.prev == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+            if(temp.prev == null) {
+                /// Si entra aqui es el primer de la llista
+                /// Si es compleix la seguent condicio es que no hi ha cap mes al bucket.
+                /// En canvi si hi ha mes, el seguent es converteix en el primer
+                // entries[hash] = null;
+                if (temp.next == null) entries[hash] = null;             //esborrar element únic (no col·lissió)
+                else {
+                    entries[hash] = temp.next;
+                    temp.next.prev = null;
+                }
+                this.ITEMS--;
+            }
             else{
                 if(temp.next != null) temp.next.prev = temp.prev;   //esborrem temp, per tant actualitzem l'anterior al següent
                 temp.prev.next = temp.next;                         //esborrem temp, per tant actualitzem el següent de l'anterior
+                this.ITEMS--;
             }
         }
     }
