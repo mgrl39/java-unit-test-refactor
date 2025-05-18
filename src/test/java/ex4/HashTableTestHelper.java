@@ -12,11 +12,15 @@ public class HashTableTestHelper {
         return Math.floorMod(k.hashCode(), 16);
     }
 
-    public static String formatExpectedEntry(String key, String value) {
+    // public static String formatExpectedEntry(String key, String value) {
+    public static String formatExpectedEntry(String key, Object value) {
         return ("\n bucket[" + getBucketIndex(key) + "] = [" + key + ", " + value + "]");
     }
 
-    public static String formatChainedEntry(String key, String value) {
+    //     public static String formatChainedEntry(String key, String value) {
+    //        return " -> [" + key + ", " + value + "]";
+    //    }
+    public static String formatChainedEntry(String key, Object value) {
         return " -> [" + key + ", " + value + "]";
     }
 
@@ -34,20 +38,23 @@ public class HashTableTestHelper {
     }
 
     /* Crea una taula amb un unic element */
-    public static HashTable createTableWithOneElement(String key, String value) {
+    // public static HashTable createTableWithOneElement(String key, String value) {
+    public static HashTable createTableWithOneElement(String key, Object value) {
         HashTable ht = new HashTable();
         ht.put(key, value);
         return ht;
     }
 
     /* Crea una taula amb múltiples elements */
-    public static HashTable createTableWithMultipleElements(Map<String, String> map) {
+    // public static HashTable createTableWithMultipleElements(Map<String, String> map) {
+    public static HashTable createTableWithMultipleElements(Map<String, Object> map) {
         HashTable ht = new HashTable();
         map.forEach(ht::put);
         return ht;
     }
 
-    public static HashTable createTableWithCollisions(String baseKey, String baseValue, int numCollisions, Map<String, String> collisionKeyValueMap) {
+    //     public static HashTable createTableWithCollisions(String baseKey, String baseValue, int numCollisions, Map<String, String> collisionKeyValueMap) {
+    public static HashTable createTableWithCollisions(String baseKey, Object baseValue, int numCollisions, Map<String, Object> collisionKeyValueMap) {
         HashTable ht = new HashTable();
         ht.put(baseKey, baseValue);
 
@@ -61,11 +68,13 @@ public class HashTableTestHelper {
         return ht;
     }
 
-    public static String formatBucketChainFromList(String baseKey, String baseValue, List<Map.Entry<String, String>> entries) {
+    //     public static String formatBucketChainFromList(String baseKey, String baseValue, List<Map.Entry<String, String>> entries) {
+    public static String formatBucketChainFromList(String baseKey, String baseValue, List<Map.Entry<String, Object>> entries) {
         String[] pairs = new String[entries.size() * 2];
         for (int i = 0; i < entries.size(); i++) {
             pairs[i * 2] = entries.get(i).getKey();
-            pairs[i * 2 + 1] = entries.get(i).getValue();
+            // pairs[i * 2 + 1] = entries.get(i).getValue();
+            pairs[i * 2 + 1] = entries.get(i).getValue().toString();
         }
         return formatBucketChain(baseKey, baseValue, pairs);
     }
@@ -74,7 +83,8 @@ public class HashTableTestHelper {
      * Retorna el format complet d'un bucket amb multiples claus i valors coL·lisionats.
      * El primer element defineix el bucket (amb index), els següents són afegits a la cadena.
      */
-    public static String formatBucketChain(String firstKey, String firstValue, String... keyValuePairs) {
+    // public static String formatBucketChain(String firstKey, String firstValue, String... keyValuePairs) {
+    public static String formatBucketChain(String firstKey, Object firstValue, String... keyValuePairs) {
         if (keyValuePairs.length % 2 != 0) throw new IllegalArgumentException("Cal passar parrels de clau i valors");
 
         StringBuilder sb = new StringBuilder();
@@ -89,25 +99,28 @@ public class HashTableTestHelper {
         return sb.toString();
     }
 
-    public static String errorMessage(String expected, String actual) {
+    public static String errorMessage(String expected, Object actual) {
         return "\nLa taula no conté l'element esperat.\nExpected:\n" + expected + "\nActual:\n" + actual;
     }
 
-    public static String[] mapToKeyValueArray(Map<String, String> map) {
+    // public static String[] mapToKeyValueArray(Map<String, String> map) {
+    public static String[] mapToKeyValueArray(Map<String, Object> map) {
         String[] result = new String[map.size() * 2];
         int i = 0;
-        for (Map.Entry<String, String> entry : map.entrySet()) {
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
             result[i++] = entry.getKey();
-            result[i++] = entry.getValue();
+            result[i++] = entry.getValue().toString();
         }
         return result;
     }
 
-    public static ArrayList<Map.Entry<String, String>> getCollisionEntries(Map<String, String> map) {
+    //  public static ArrayList<Map.Entry<String, String>> getCollisionEntries(Map<String, String> map) {
+    public static ArrayList<Map.Entry<String, Object>> getCollisionEntries(Map<String, Object> map) {
         return new ArrayList<>(map.entrySet());
     }
 
-    public static String getUnusedCollisionKey(HashTable table, String baseKey, Map<String, String> usedKeys) {
+    // public static String getUnusedCollisionKey(HashTable table, String baseKey, Map<String, String> usedKeys) {
+    public static String getUnusedCollisionKey(HashTable table, String baseKey, Map<String, Object> usedKeys) {
         List<String> candidates = table.getCollisionsForKey(baseKey, 10);
         for (String candidate : candidates) {
             if (!usedKeys.containsKey(candidate) && !candidate.equals(baseKey)) {

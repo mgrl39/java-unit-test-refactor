@@ -26,7 +26,8 @@ public class HashTableGetTest {
         final String value = "valor";
 
         HashTable hashTable = createTableWithOneElement(key, value);
-        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key)));
+        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key).toString()));
+        // assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key).toString()));
     }
 
     /**
@@ -36,10 +37,12 @@ public class HashTableGetTest {
     public void getPrimerElementDeBucketAmbColisio() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
-        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key)));
+        assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key).toString()));
+        // assertEquals(value, hashTable.get(key), errorMessage(value, hashTable.get(key).toString()));
     }
 
     /**
@@ -49,16 +52,23 @@ public class HashTableGetTest {
     public void getElementColisioTaulaSegonaPos() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
 
         // Recuperem el valor de la 1a clau col·lisionada (2a posició del bucket)
+        final Object expected = entries.get(0).getValue();
+        final Object actual = hashTable.get(entries.get(0).getKey());
+        /*
         final String expected = entries.get(0).getValue();
         final String actual = hashTable.get(entries.get(0).getKey());
-        assertEquals(expected, actual, errorMessage(expected, actual));
+         */
+        assertEquals(expected, actual, errorMessage(expected.toString(), actual.toString()));
+        // assertEquals(expected, actual, errorMessage(expected, actual));
     }
 
     /**
@@ -68,15 +78,22 @@ public class HashTableGetTest {
     public void getElementColisioTaulaTerceraPos() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         // Crear una taula amb clau base (pos 1) + 2 col·lisions (posicions 2 i 3)
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
         // Recuperem el valor de la 2a clau col·lisionada (3a posició del bucket)
+        final Object expected = entries.get(1).getValue();
+        final Object actual = hashTable.get(entries.get(1).getKey());
+        /*
         final String expected = entries.get(1).getValue();
         final String actual = hashTable.get(entries.get(1).getKey());
-        assertEquals(expected, actual, errorMessage(expected, actual));
+         */
+        assertEquals(expected, actual, errorMessage(expected.toString(), actual.toString()));
+        // assertEquals(expected, actual, errorMessage(expected, actual));
     }
 
     /**
@@ -114,7 +131,8 @@ public class HashTableGetTest {
     public void getElementQueNoExisteixPosOcupadaPerElementsCol() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 

@@ -21,7 +21,8 @@ public class HashTableCountTest {
     @Test
     public void countPutElementNoColDinsTaulaBuidaAndDrop() {
         final String key = "clau";
-        final String value = "valor";
+        // final String value = "valor";
+        final boolean value = true;
 
         HashTable hashTable = createEmptyTable();  // Inicialment hauria d'estar buida
         assertEquals(0, hashTable.count(), valueCountNotCorrect(0, hashTable.count()));
@@ -38,8 +39,10 @@ public class HashTableCountTest {
     @Test
     public void countPutElementNoColDinsTaulaNoBuidaDespresDropElPrimer() {
         final String key = "clau";
-        final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        final double value = 3.5;
+        // final String value = "valor";
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
         // Inicialment hauria d'haver ja dos elements dins
@@ -93,7 +96,8 @@ public class HashTableCountTest {
     public void countPutElementColDinsTaulaNoBuidaTerceraPosDropTercera() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
+        // Map<String, String> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
+        Map<String, Object> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         // Inicialment hauria d'haver ja dos elements afegits
@@ -150,7 +154,8 @@ public class HashTableCountTest {
     public void countUpdateElementSiColisionaTaulaNoBuidaDropElementNoExisteixTotIquePosOcupada() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         assertEquals(2, hashTable.count(), valueCountNotCorrect(2, hashTable.count()));
@@ -187,10 +192,13 @@ public class HashTableCountTest {
     public void countUpdateSegonElementSiColisionaDropElementNoExisteixSevaPosOcupada() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
         assertEquals(3, hashTable.count(), valueCountNotCorrect(3, hashTable.count()));
 
         // Update sobre un element que col en segona pos

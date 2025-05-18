@@ -39,7 +39,8 @@ public class HashTablePutTest {
      */
     @Test
     public void putElementNoColTaulaNoBuida() {
-        Map<String, String> dades = Map.of(
+        // Map<String, String> dades = Map.of(
+        Map<String, Object> dades = Map.of(
                 "fer", "m03",
                 "david", "m05",
                 "yago", "m12"
@@ -66,7 +67,8 @@ public class HashTablePutTest {
     public void putElementColSegonaPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         final String expected = formatBucketChain(key, value, mapToKeyValueArray(colMap));
@@ -84,7 +86,8 @@ public class HashTablePutTest {
     public void putElementColTerceraPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
         final String expected = formatBucketChain(key, value, mapToKeyValueArray(colMap));
@@ -100,7 +103,8 @@ public class HashTablePutTest {
     @Test
     public void updateElementNoColTaulaNoBuida() {
         // Elements previs que no col·lisionen amb "clau"
-        Map<String, String> dades = Map.of(
+        // Map<String, String> dades = Map.of(
+        Map<String, Object> dades = Map.of(
                 "fer", "m03",
                 "david", "m05",
                 "yago", "m12"
@@ -109,7 +113,8 @@ public class HashTablePutTest {
 
         final String key = "clau";
         final String initialValue  = "valor";
-        final String updatedValue = "nou valor";
+        // final String updatedValue = "nou valor";
+        final StringBuilder updatedValue = new StringBuilder();
 
         // Afegim la clau per primera vegada
         hashTable.put(key, initialValue);
@@ -129,10 +134,12 @@ public class HashTablePutTest {
     public void updateElementColPrimeraPosTaulaNoBuida() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
-        final String updatedValue = "nou valor";
+        // final String updatedValue = "nou valor";
+        final Integer updatedValue = 777;
         hashTable.put(key, updatedValue);
 
         final String expected = formatBucketChain(key, updatedValue, mapToKeyValueArray(colMap));
@@ -150,7 +157,8 @@ public class HashTablePutTest {
     public void updateElementColSegonaPosTaulaNoBuida() {
         final String key = "clau"; // primera clau, entrada al bucket
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         // Ara a colKeys tindrem un colKey.get(0) que es la segona entrada al bucket (primer col·lisionat)
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
@@ -181,12 +189,14 @@ public class HashTablePutTest {
     public void testUpdateElementColisioTerceraPosTaulaNobuida() {
         final String key = "clau";
         final String value = "valor";
-        Map<String,String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String,Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 
         // Obtenim les entrades en una llista ordenada
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
 
         // Accedim a la tercera posicio (2a colisio, pos 3 del bucket)
         String secondColKey = entries.get(1).getKey();
@@ -199,7 +209,8 @@ public class HashTablePutTest {
         // colKeys.get(0): 2a posició (1a col·lisió)
         // colKeys.get(1): 3a posició (2a col·lisió) -> actualitzem aquest
         String[] pairs = {
-                entries.get(0).getKey(), entries.get(0).getValue(), // col·lisio 1 (2na pos)
+                // entries.get(0).getKey(), entries.get(0).getValue(), // col·lisio 1 (2na pos)
+                entries.get(0).getKey(), entries.get(0).getValue().toString(), // col·lisio 1 (2na pos)
                 entries.get(1).getKey(), updatedValue               // col·lisio 2 (3ra pos --> update)
         };
         final String expected = formatBucketChain(key, value, pairs);

@@ -40,14 +40,17 @@ public class HashTableDropTest {
     public void dropElementColisionaDinsUnaTaulaPrimeraPos() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
         hashTable.drop(key);
 
         final String expected = formatExpectedEntry(entries.get(0).getKey(), entries.get(0).getValue());
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
+        // assertEquals(expected, hashTable, errorMessage(expected, hashTable));
     }
 
     /**
@@ -57,14 +60,17 @@ public class HashTableDropTest {
     public void dropElementColisionaDinsUnaTaulaSegonaPos() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
         hashTable.drop(entries.get(0).getKey());
 
         final String expected = formatExpectedEntry(key, value);
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
+        // assertEquals(expected, hashTable, errorMessage(expected, hashTable));
     }
 
     /**
@@ -74,14 +80,17 @@ public class HashTableDropTest {
     public void dropElementcolisionaDinsUnaTaulaTerceraPos() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
         hashTable.drop(entries.get(1).getKey());
 
-        final String expected = formatBucketChain(key, value, entries.get(0).getKey(), entries.get(0).getValue());
+        final String expected = formatBucketChain(key, value, entries.get(0).getKey(), entries.get(0).getValue().toString());
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
+        // assertEquals(expected, hashTable, errorMessage(expected, hashTable));
     }
 
     /**
@@ -115,6 +124,7 @@ public class HashTableDropTest {
         final String expected = formatExpectedEntry(key, value);
         // System.out.printf(expected);
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
+        // assertEquals(expected, hashTable, errorMessage(expected, hashTable));
     }
 
     /**
@@ -124,14 +134,17 @@ public class HashTableDropTest {
     public void dropElementNoExisteixSevaPosOcupadaPerTresElementsColisionats() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
         final String missingKey = getUnusedCollisionKey(hashTable, key, colMap);
         hashTable.drop(missingKey);
         final String expected = formatBucketChainFromList(key, value, entries);
         // System.out.printf(expected);
         assertEquals(expected, hashTable.toString(), errorMessage(expected, hashTable.toString()));
+        // assertEquals(expected, hashTable, errorMessage(expected, hashTable));
     }
 }

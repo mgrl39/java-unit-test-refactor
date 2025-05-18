@@ -41,7 +41,8 @@ public class HashTableSizeTest {
     public void sizePutElementNoColDinsTaulaNoBuidaDespresDropElPrimer() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
 
         assertEquals(HASH_TABLE_SIZE, hashTable.size(), valueSizeNotCorrect(HASH_TABLE_SIZE, hashTable.size()));
@@ -87,7 +88,8 @@ public class HashTableSizeTest {
     public void sizePutElementColDinsTaulaNoBuidaTerceraPosDropTercera() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
+        // Map<String, String> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
+        Map<String, Object> colMap = new LinkedHashMap<>(); // colMap tindra la 1 clau colisionada (2na pos)
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         assertEquals(HASH_TABLE_SIZE, hashTable.size(), valueSizeNotCorrect(HASH_TABLE_SIZE, hashTable.size()));
@@ -135,7 +137,8 @@ public class HashTableSizeTest {
     public void sizeUpdateElementSiColisionaTaulaNoBuidaDropElementNoExisteixTotIquePosOcupada() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
+        // Map<String, Object> colMap = new LinkedHashMap<>();
 
         HashTable hashTable = createTableWithCollisions(key, value, 1, colMap);
         assertEquals(HASH_TABLE_SIZE, hashTable.size(), valueSizeNotCorrect(HASH_TABLE_SIZE, hashTable.size()));
@@ -169,10 +172,12 @@ public class HashTableSizeTest {
     public void sizeUpdateSegonElementSiColisionaDropElementNoExisteixSevaPosOcupada() {
         final String key = "clau";
         final String value = "valor";
-        Map<String, String> colMap = new LinkedHashMap<>();
+        // Map<String, Object> colMap = new LinkedHashMap<>();
+        Map<String, Object> colMap = new LinkedHashMap<>();
         HashTable hashTable = createTableWithCollisions(key, value, 2, colMap);
 
-        List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
+        List<Map.Entry<String, Object>> entries = getCollisionEntries(colMap);
+        // List<Map.Entry<String, String>> entries = getCollisionEntries(colMap);
         assertEquals(HASH_TABLE_SIZE, hashTable.size(), valueSizeNotCorrect(HASH_TABLE_SIZE, hashTable.size()));
 
         // Update sobre un element que col en segona pos
